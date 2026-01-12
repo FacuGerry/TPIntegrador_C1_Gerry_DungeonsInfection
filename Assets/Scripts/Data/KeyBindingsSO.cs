@@ -1,6 +1,6 @@
 using UnityEngine;
 
-[CreateAssetMenu(fileName = "PlayerData", menuName = "PlayerData/KeyBindings")]
+[CreateAssetMenu(fileName = "GameData", menuName = "GameData/KeyBindings")]
 public class KeyBindingsSO : ScriptableObject
 {
     [Header("Move")]
@@ -22,11 +22,6 @@ public class KeyBindingsSO : ScriptableObject
     public KeyCode interact;
     public KeyCode interact2;
 
-    [Header("Select")]
-    public KeyCode select;
-    public KeyCode select2;
-
     [Header("Pause")]
     public KeyCode pause;
-    public KeyCode pause2;
 }
