@@ -5,9 +5,13 @@ using UnityEngine;
 
 public class EnemyTurnManager : MonoBehaviour
 {
-    public static event Action OnEnemyAttacked;
+    public static event Action<Character> OnEnemyAttack;
+    public static event Action OnEnemyAttackEnd;
+
     private Character playerAttacked;
     private int attack;
+
+    private IEnumerator _courroutineInfectedAttack;
 
     private void OnEnable()
     {
@@ -27,8 +31,6 @@ public class EnemyTurnManager : MonoBehaviour
     private IEnumerator InfectedAttack(CharacterDataSO data)
     {
         float rand = UnityEngine.Random.value;
-
-        yield return new WaitForSeconds(1f);
 
         if (rand < 0.15f && data.life < (data.life / 1.5))
         {
@@ -53,8 +55,11 @@ public class EnemyTurnManager : MonoBehaviour
             playerAttacked.life -= attack;
         }
         attack = data.attack;
+        OnEnemyAttack?.Invoke(playerAttacked);
 
-        OnEnemyAttacked?.Invoke();
+        yield return new WaitForSeconds(1f);
+
+        OnEnemyAttackEnd?.Invoke();
     }
 
     public void OnEnemyTurn_SelectPlayerToAttack(CharacterDataSO data, List<Character> players)
@@ -77,8 +82,11 @@ public class EnemyTurnManager : MonoBehaviour
         switch (data.characterName)
         {
             case "Infected":
-                IEnumerator coroutine = InfectedAttack(data);
-                StartCoroutine(coroutine);
+                if (_courroutineInfectedAttack != null)
+                    StopCoroutine(_courroutineInfectedAttack);
+
+                _courroutineInfectedAttack = InfectedAttack(data);
+                StartCoroutine(_courroutineInfectedAttack);
                 break;
             case "Virus":
                 break;

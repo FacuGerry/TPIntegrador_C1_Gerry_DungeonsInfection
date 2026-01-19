@@ -4,14 +4,17 @@ using UnityEngine;
 
 public class Character : MonoBehaviour
 {
-    public static event Action<CharacterDataSO, List<Character>> OnPlayerTurn;
     public static event Action<CharacterDataSO, List<Character>> OnEnemyTurn;
+    public static event Action<Character> OnEnemyClicked;
+    public static event Action<Character> OnDataSet;
 
-    [SerializeField] private CharacterDataSO _data;
+    public CharacterDataSO data;
     private SpriteRenderer _sprite;
     private Animator _animator;
 
     public int life;
+
+    private bool _isSelectable;
 
     private void Awake()
     {
@@ -19,21 +22,41 @@ public class Character : MonoBehaviour
         _animator = GetComponent<Animator>();
     }
 
-    public void SetData(CharacterDataSO data)
+    private void Start()
     {
-        _data = data;
-        life = data.life;
-        _sprite = data.sprite;
-        _animator = data.animator;
-
-        gameObject.name = _data.name;
+        _isSelectable = false;
     }
 
-    public void InCharacterTurn_Move(List<Character> players, List<Character> enemies)
+    private void OnMouseDown()
     {
-        if (_data.isPlayer)
-            OnPlayerTurn?.Invoke(_data, enemies);
-        else
-            OnEnemyTurn?.Invoke(_data, players);
+        if (!_isSelectable)
+            return;
+
+        OnEnemyClicked?.Invoke(this);
+    }
+
+    public void SetData(CharacterDataSO dataChar)
+    {
+        data = dataChar;
+        life = dataChar.life;
+        _sprite = dataChar.sprite;
+        _animator = dataChar.animator;
+
+        gameObject.name = data.name;
+
+        OnDataSet?.Invoke(this);
+    }
+
+    public void SetSelectable(bool isOn)
+    {
+        _isSelectable = isOn;
+    }
+
+    public void InCharacterTurn_Move(List<Character> players)
+    {
+        if (data.isPlayer)
+            return;
+
+        OnEnemyTurn?.Invoke(data, players);
     }
 }

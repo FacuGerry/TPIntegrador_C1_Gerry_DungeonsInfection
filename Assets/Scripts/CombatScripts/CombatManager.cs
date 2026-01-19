@@ -1,9 +1,27 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class CombatManager : MonoBehaviour
 {
+    public static event Action OnPlayerTurn;
+
+    public enum CombatStates
+    {
+        None,
+        Start,
+        ChangeTurn,
+        EnemyTurn,
+        PlayerSelectAction,
+        PlayerSelectSpell,
+        PlayerSelectEnemy,
+        Animate,
+        Won,
+        Lost
+    }
+
     private BattleDefinitionSO _battle;
+    private CombatStates _state;
 
     [Header("Prefabs")]
     [SerializeField] private GameObject _playerPrefab;
@@ -19,6 +37,15 @@ public class CombatManager : MonoBehaviour
 
     private int _turnCount;
 
+    private CombatAction _combatAction;
+
+    private Character _currentCharacter;
+
+    private void Awake()
+    {
+        _combatAction = GetComponent<CombatAction>();
+    }
+
     private void Start()
     {
         _battle = GlobalManager.Instance.currentBattle;
@@ -29,21 +56,76 @@ public class CombatManager : MonoBehaviour
         }
         Debug.Log("Combate cargado correctamente", gameObject);
 
-        SpawnPlayers();
-        SpawnEnemies();
-
-        _turnCount = 0;
-        ChangeTurns();
+        ChangeState(CombatStates.Start);
     }
 
     private void OnEnable()
     {
-        EnemyTurnManager.OnEnemyAttacked += OnEndTurn_ChangeTurnCount;
+        CombatAction.OnPlayerEndTurn += OnEndTurn_ChangeTurnCount;
+
+        EnemyTurnManager.OnEnemyAttackEnd += OnEndTurn_ChangeTurnCount;
+
+        UiCombatButtons.OnAttackClicked += OnPlayerAttack_ChooseEnemy;
     }
 
     private void OnDisable()
     {
-        EnemyTurnManager.OnEnemyAttacked -= OnEndTurn_ChangeTurnCount;
+        CombatAction.OnPlayerEndTurn -= OnEndTurn_ChangeTurnCount;
+
+        EnemyTurnManager.OnEnemyAttackEnd -= OnEndTurn_ChangeTurnCount;
+
+        UiCombatButtons.OnAttackClicked -= OnPlayerAttack_ChooseEnemy;
+    }
+
+    public void ChangeState(CombatStates newState)
+    {
+        _state = newState;
+
+        switch (newState)
+        {
+            case CombatStates.None:
+                Debug.LogError("THERE IS NO COMBAT STATE");
+                break;
+
+            case CombatStates.Start:
+                SpawnPlayers();
+                SpawnEnemies();
+
+                _turnCount = 0;
+                StartTurn();
+                break;
+
+            case CombatStates.ChangeTurn:
+                _turnCount++;
+                if (_turnCount > (_turnsList.Count - 1))
+                    _turnCount = 0;
+                StartTurn();
+                break;
+
+            case CombatStates.EnemyTurn:
+                StartEnemyTurn(_currentCharacter);
+                break;
+
+            case CombatStates.PlayerSelectAction:
+                OnPlayerTurn?.Invoke();
+                break;
+
+            case CombatStates.PlayerSelectSpell:
+                break;
+
+            case CombatStates.PlayerSelectEnemy:
+                _combatAction.PlayerSelectEnemy(_currentCharacter.data);
+                break;
+
+            case CombatStates.Animate:
+                break;
+
+            case CombatStates.Won:
+                break;
+
+            case CombatStates.Lost:
+                break;
+        }
     }
 
     public void SpawnPlayers()
@@ -78,25 +160,40 @@ public class CombatManager : MonoBehaviour
         }
     }
 
-    public void ChangeTurns()
+    public void StartTurn()
     {
-        Character currentCharacter = _turnsList[_turnCount];
-        if (currentCharacter.life <= 0)
+        _currentCharacter = _turnsList[_turnCount];
+        if (_currentCharacter.life <= 0)
         {
-            _turnsList.Remove(currentCharacter);
+            _turnsList.Remove(_currentCharacter);
+            if (!_currentCharacter.data.isPlayer)
+                _enemiesList.Remove(_currentCharacter);
             OnEndTurn_ChangeTurnCount();
+            return;
+        }
+
+        if (_currentCharacter.data.isPlayer)
+        {
+            ChangeState(CombatStates.PlayerSelectAction);
         }
         else
         {
-            currentCharacter.InCharacterTurn_Move(_playersList, _enemiesList);
+            ChangeState(CombatStates.EnemyTurn);
         }
+    }
+
+    public void StartEnemyTurn(Character enemy)
+    {
+        enemy.InCharacterTurn_Move(_playersList);
     }
 
     public void OnEndTurn_ChangeTurnCount()
     {
-        _turnCount++;
-        if (_turnCount > (_turnsList.Count - 1))
-            _turnCount = 0;
-        ChangeTurns();
+        ChangeState(CombatStates.ChangeTurn);
+    }
+
+    public void OnPlayerAttack_ChooseEnemy()
+    {
+        ChangeState(CombatStates.PlayerSelectEnemy);
     }
 }
