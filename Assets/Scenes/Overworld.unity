@@ -376,6 +376,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _battleToLoad: {fileID: 11400000, guid: aad427d14be72454bb30ef5fa1798393, type: 2}
+  _playerPositionSo: {fileID: 11400000, guid: 488f4e99c86e8aa49821088839115fdc, type: 2}
+  _playerPositionToSave: {x: 0, y: 0, z: 0}
 --- !u!61 &1247409370
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -501,9 +503,12 @@ GameObject:
   m_Component:
   - component: {fileID: 1529314731}
   - component: {fileID: 1529314730}
+  - component: {fileID: 1529314736}
   - component: {fileID: 1529314733}
   - component: {fileID: 1529314732}
   - component: {fileID: 1529314729}
+  - component: {fileID: 1529314735}
+  - component: {fileID: 1529314734}
   m_Layer: 7
   m_Name: Royd
   m_TagString: Untagged
@@ -568,7 +573,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: 7482667652216324306, guid: 311925a002f4447b3a28927169b83ea6, type: 3}
+  m_Sprite: {fileID: 6937817954938267909, guid: 496e7d01abc5eec498598e537b9cbec7, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -589,8 +594,8 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: -2, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
+  m_LocalScale: {x: 3, y: 3, z: 3}
+  m_ConstrainProportionsScale: 1
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -607,8 +612,8 @@ Rigidbody2D:
   m_UseFullKinematicContacts: 0
   m_UseAutoMass: 0
   m_Mass: 1
-  m_LinearDrag: 0
-  m_AngularDrag: 0
+  m_LinearDrag: 10
+  m_AngularDrag: 10
   m_GravityScale: 0
   m_Material: {fileID: 0}
   m_IncludeLayers:
@@ -659,14 +664,61 @@ BoxCollider2D:
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
-    oldSize: {x: 1, y: 1}
+    oldSize: {x: 0.16, y: 0.19}
     newSize: {x: 1, y: 1}
     adaptiveTilingThreshold: 0.5
     drawMode: 0
     adaptiveTiling: 0
   m_AutoTiling: 0
-  m_Size: {x: 1, y: 1}
+  m_Size: {x: 0.15, y: 0.18}
   m_EdgeRadius: 0
+--- !u!114 &1529314734
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1529314728}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0a0d27e7a626b3e4bb924833a0f68f4a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _playerPosition: {fileID: 11400000, guid: 488f4e99c86e8aa49821088839115fdc, type: 2}
+--- !u!114 &1529314735
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1529314728}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 277bda957e999e1459e32a1f89632456, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!95 &1529314736
+Animator:
+  serializedVersion: 7
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1529314728}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: a952bfd5d150f6642873ead8d6224481, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_AnimatePhysics: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
 --- !u!1 &1914095133
 GameObject:
   m_ObjectHideFlags: 0
@@ -699,6 +751,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _battleToLoad: {fileID: 11400000, guid: 3df5e9cdfca5ed74ab4c871063303cca, type: 2}
+  _playerPositionSo: {fileID: 11400000, guid: 488f4e99c86e8aa49821088839115fdc, type: 2}
+  _playerPositionToSave: {x: -1, y: 0, z: 0}
 --- !u!212 &1914095135
 SpriteRenderer:
   m_ObjectHideFlags: 0

@@ -6,4 +6,7 @@ public class BattleDefinitionSO : ScriptableObject
 {
     public List<CharacterDataSO> players;
     public List<CharacterDataSO> enemies;
+
+    public int battleLevel;
+    public bool isWon;
 }

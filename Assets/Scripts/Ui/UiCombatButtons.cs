@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
@@ -30,6 +31,9 @@ public class UiCombatButtons : MonoBehaviour
     [Header("Canvas Groups")]
     [SerializeField] private CanvasGroup _canvasActions;
     [SerializeField] private CanvasGroup _canvasSpells;
+
+    [Header("Spell Buttons Unlocking")]
+    [SerializeField] private UnlockingSpellsSO _spellsUnlocked;
 
     private List<Character> _enemies;
 
@@ -74,14 +78,25 @@ public class UiCombatButtons : MonoBehaviour
 
     public void ToogleActionButtons(bool isOn)
     {
-        _canvasActions.alpha = isOn? 1f : 0f;
+        _canvasActions.alpha = isOn ? 1f : 0f;
         _canvasActions.interactable = isOn;
         _canvasActions.blocksRaycasts = isOn;
     }
 
     public void ToogleSpellsButtons(bool isOn)
     {
-        _canvasSpells.alpha = isOn? 1f : 0f;
+        if (!_spellsUnlocked.hasFireball)
+        {
+            ToogleActionButtons(true);
+            return;
+        }
+
+        _fireballBtn.gameObject.SetActive(_spellsUnlocked.hasFireball);
+        _iceWallBtn.gameObject.SetActive(_spellsUnlocked.hasIceWall);
+        _darkShieldBtn.gameObject.SetActive(_spellsUnlocked.hasDarkShield);
+        _healingRootBtn.gameObject.SetActive(_spellsUnlocked.hasHealingRoot);
+
+        _canvasSpells.alpha = isOn ? 1f : 0f;
         _canvasSpells.interactable = isOn;
         _canvasSpells.blocksRaycasts = isOn;
     }

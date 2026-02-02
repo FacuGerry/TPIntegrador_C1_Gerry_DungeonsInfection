@@ -1567,6 +1567,7 @@ GameObject:
   - component: {fileID: 676465721}
   - component: {fileID: 676465724}
   - component: {fileID: 676465725}
+  - component: {fileID: 676465726}
   m_Layer: 5
   m_Name: CanvasSelection
   m_TagString: Untagged
@@ -1698,6 +1699,19 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _textRoyd: {fileID: 1486824788}
   _textThane: {fileID: 1435310658}
+--- !u!114 &676465726
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 676465719}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 512d80186dae59644af8d5dc3803c220, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _text: {fileID: 98422839}
 --- !u!1 &751285469
 GameObject:
   m_ObjectHideFlags: 0
@@ -1970,37 +1984,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 838180765}
   m_CullTransparentMesh: 1
---- !u!1 &949735432
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 949735433}
-  m_Layer: 0
-  m_Name: Enemy5
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &949735433
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 949735432}
-  serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 1, y: 4, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 967926313}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &967926312
 GameObject:
   m_ObjectHideFlags: 0
@@ -2033,40 +2016,7 @@ Transform:
   - {fileID: 1408158177}
   - {fileID: 1384945830}
   - {fileID: 309700321}
-  - {fileID: 1032218243}
-  - {fileID: 949735433}
   m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &1032218242
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1032218243}
-  m_Layer: 0
-  m_Name: Enemy4
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &1032218243
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1032218242}
-  serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -1, y: 4, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 967926313}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1098597006
 GameObject:
@@ -2192,6 +2142,8 @@ GameObject:
   - component: {fileID: 1243095682}
   - component: {fileID: 1243095684}
   - component: {fileID: 1243095685}
+  - component: {fileID: 1243095686}
+  - component: {fileID: 1243095687}
   m_Layer: 0
   m_Name: CombatManager
   m_TagString: Untagged
@@ -2220,8 +2172,6 @@ MonoBehaviour:
   - {fileID: 1408158177}
   - {fileID: 1384945830}
   - {fileID: 309700321}
-  - {fileID: 1032218243}
-  - {fileID: 949735433}
 --- !u!4 &1243095683
 Transform:
   m_ObjectHideFlags: 0
@@ -2249,6 +2199,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a92fb9bb0fd65084eac94bf98ba894a6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _infectedAttacks: {fileID: 11400000, guid: 251ccad7a424b5047a83992d151a3a07, type: 2}
 --- !u!114 &1243095685
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2261,7 +2212,31 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8ec5d39a2e81f4548a1481d8e36f4900, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _controls: {fileID: 11400000, guid: 69fb020aef4e4684aae24a642cc034f2, type: 2}
+--- !u!114 &1243095686
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1243095681}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cda7d5239ed43134bab1533c3bf0ee5d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _sceneToLoad: Overworld
+--- !u!114 &1243095687
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1243095681}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d42a0e2822f78a04cb2ef8ca8cf175f8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1384945829
 GameObject:
   m_ObjectHideFlags: 0

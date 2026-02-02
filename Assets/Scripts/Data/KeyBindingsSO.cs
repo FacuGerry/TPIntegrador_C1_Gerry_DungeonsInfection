@@ -9,18 +9,11 @@ public class KeyBindingsSO : ScriptableObject
     public KeyCode down;
     public KeyCode right;
 
-    public KeyCode up2;
-    public KeyCode left2;
-    public KeyCode down2;
-    public KeyCode right2;
-
     [Header("Open Map")]
     public KeyCode openMap;
-    public KeyCode openMap2;
 
     [Header("Interact / Use")]
     public KeyCode interact;
-    public KeyCode interact2;
 
     [Header("Pause")]
     public KeyCode pause;

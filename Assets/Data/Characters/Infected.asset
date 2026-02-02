@@ -15,6 +15,12 @@ MonoBehaviour:
   characterName: Infected
   life: 10
   attack: 1
-  sprite: {fileID: 0}
-  animator: {fileID: 0}
+  spriteRenderer: {fileID: 4563017240499988079, guid: 17fdb2e3226b08148b9c5d3aa02cdf88, type: 3}
+  animator: {fileID: 7119002091330096071, guid: 17fdb2e3226b08148b9c5d3aa02cdf88, type: 3}
   isPlayer: 0
+  fireball: 0
+  iceWall: 0
+  darkShield: 0
+  healingRoot: 0
+  defense: 0
+  valueToEscape: 0
