@@ -17,4 +17,6 @@ public class CharacterDataSO : ScriptableObject
     public int healingRoot;
     public int defense;
     public float valueToEscape;
+    public int valueToAddWhenLevelUp;
+    public int valueToAddWhenLevelUpDefense;
 }

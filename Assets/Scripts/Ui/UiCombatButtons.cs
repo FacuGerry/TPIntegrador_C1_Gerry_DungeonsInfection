@@ -16,6 +16,8 @@ public class UiCombatButtons : MonoBehaviour
     public static event Action OnDarkShieldClicked;
     public static event Action OnHealingRootClicked;
 
+    public static event Action OnNotHavingSpells;
+
     [Header("Action Buttons")]
     [SerializeField] private Button _attackBtn;
     [SerializeField] private Button _defendBtn;
@@ -85,9 +87,10 @@ public class UiCombatButtons : MonoBehaviour
 
     public void ToogleSpellsButtons(bool isOn)
     {
-        if (!_spellsUnlocked.hasFireball)
+        if (!_spellsUnlocked.hasFireball && isOn)
         {
             ToogleActionButtons(true);
+            OnNotHavingSpells?.Invoke();
             return;
         }
 

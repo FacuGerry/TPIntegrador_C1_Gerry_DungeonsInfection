@@ -750,7 +750,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 27a2d6cad7a973b4c9ff7b5aeaa5e94b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _battleToLoad: {fileID: 11400000, guid: 3df5e9cdfca5ed74ab4c871063303cca, type: 2}
+  _battleToLoad: {fileID: 11400000, guid: 39960353d0a9e634484287a1f4505449, type: 2}
   _playerPositionSo: {fileID: 11400000, guid: 488f4e99c86e8aa49821088839115fdc, type: 2}
   _playerPositionToSave: {x: -1, y: 0, z: 0}
 --- !u!212 &1914095135

@@ -11,7 +11,10 @@ public class CombatAction : MonoBehaviour
     public static event Action<Character> OnPlayerKillEnemy;
     public static event Action<Character> OnPlayerKillEnemyShowText;
 
+    public static event Action<Character> OnUpdateEnemyLife;
+
     public static event Action<Character, Spells> OnPlayerUsedSpell;
+    public static event Action<Character, Character> OnPlayerUsedSpellAnimate;
     public static event Action<Character> OnPlayerHealedWithDarkShield;
 
     public enum Spells
@@ -28,7 +31,7 @@ public class CombatAction : MonoBehaviour
 
     private IEnumerator _corroutineSelectEnemy;
 
-    private bool IsFireball = false;
+    private bool _isFireball = false;
 
     private void OnEnable()
     {
@@ -61,18 +64,21 @@ public class CombatAction : MonoBehaviour
 
                 if (ray.collider != null && ray.collider.TryGetComponent(out Character enemy))
                 {
-                    if (IsFireball)
+                    if (_isFireball)
                     {
                         enemy.life -= player.data.fireball;
                         OnPlayerUsedSpell?.Invoke(player, _spells);
                         _spells = Spells.None;
-                        IsFireball = false;
+                        _isFireball = false;
+                        OnPlayerUsedSpellAnimate?.Invoke(player, enemy);
                     }
                     else
                     {
                         enemy.life -= player.data.attack;
                         OnPlayerAttackedEnemy?.Invoke(player, enemy);
                     }
+
+                    OnUpdateEnemyLife?.Invoke(enemy);
 
                     Debug.Log(enemy.name + " life is " + enemy.life, enemy.gameObject);
 
@@ -111,7 +117,7 @@ public class CombatAction : MonoBehaviour
 
     public void UseFireball(Character player)
     {
-        IsFireball = true;
+        _isFireball = true;
         PlayerSelectEnemy(player);
         _spells = Spells.Fireball;
     }
@@ -119,6 +125,7 @@ public class CombatAction : MonoBehaviour
     public void UseIceWall(Character player)
     {
         player.defense += player.data.iceWall;
+        player.isIceWallOn = true;
         _spells = Spells.IceWall;
         OnPlayerUsedSpell?.Invoke(player, _spells);
         _spells = Spells.None;

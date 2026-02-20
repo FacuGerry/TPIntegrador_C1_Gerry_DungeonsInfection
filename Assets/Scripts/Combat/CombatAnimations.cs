@@ -8,14 +8,18 @@ public class CombatAnimations : MonoBehaviour
 
     private void OnEnable()
     {
-        CombatAction.OnPlayerAttackedEnemy += OnPlayerAttack_Animate;
+        CombatAction.OnPlayerAttackedEnemy += OnPlayerAttackorSpell_Animate;
+
+        CombatAction.OnPlayerUsedSpellAnimate += OnPlayerAttackorSpell_Animate;
 
         EnemyTurnManager.OnAnimateEnemyAttack += OnEnemyAttack_Animate;
     }
 
     private void OnDisable()
     {
-        CombatAction.OnPlayerAttackedEnemy -= OnPlayerAttack_Animate;
+        CombatAction.OnPlayerAttackedEnemy -= OnPlayerAttackorSpell_Animate;
+
+        CombatAction.OnPlayerUsedSpellAnimate -= OnPlayerAttackorSpell_Animate;
 
         EnemyTurnManager.OnAnimateEnemyAttack -= OnEnemyAttack_Animate;
     }
@@ -63,7 +67,7 @@ public class CombatAnimations : MonoBehaviour
         }
     }
 
-    public void OnPlayerAttack_Animate(Character player, Character enemy)
+    public void OnPlayerAttackorSpell_Animate(Character player, Character enemy)
     {
         if (_corroutinePlayerAttack != null)
             StopCoroutine(_corroutinePlayerAttack);

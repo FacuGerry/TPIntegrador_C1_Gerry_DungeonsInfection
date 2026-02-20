@@ -6,7 +6,8 @@ public class GlobalManager : MonoBehaviour
 {
     public static GlobalManager Instance;
     [NonSerialized] public BattleDefinitionSO currentBattle;
-    public string sceneToLoad;
+    [SerializeField] private string _sceneToLoadAfterLoading;
+    [SerializeField] private string sceneToLoadForCombats;
     [SerializeField] private PositionInOverworldSO _playerPosition;
     [SerializeField] private Vector3 _playerInitialPosition;
 
@@ -26,7 +27,7 @@ public class GlobalManager : MonoBehaviour
     {
         _playerPosition.position = _playerInitialPosition;
 
-        SceneManager.LoadScene("Overworld");
+        SceneManager.LoadScene(_sceneToLoadAfterLoading);
     }
 
     private void OnEnable()
@@ -42,6 +43,6 @@ public class GlobalManager : MonoBehaviour
     public void OnEnemyTriggered_SwitchToFightScene(BattleDefinitionSO battleDefinitionSO)
     {
         currentBattle = battleDefinitionSO;
-        SceneManager.LoadScene(sceneToLoad);
+        SceneManager.LoadScene(sceneToLoadForCombats);
     }
 }

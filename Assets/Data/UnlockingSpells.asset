@@ -16,3 +16,11 @@ MonoBehaviour:
   hasIceWall: 0
   hasDarkShield: 0
   hasHealingRoot: 0
+  level: 0
+  experience: 0
+  experienceToGain: 75
+  experienceToLevelUp: 100
+  levelToUnlockFireball: 2
+  levelToUnlockIceWall: 3
+  levelToUnlockDarkShield: 4
+  levelToUnlockHealingRoot: 5

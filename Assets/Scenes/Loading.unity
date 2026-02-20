@@ -255,7 +255,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f294cb7c994c77b4db475ce4e2a18a86, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  sceneToLoad: Combat
+  _sceneToLoadAfterLoading: MainMenu
+  sceneToLoadForCombats: Combat
   _playerPosition: {fileID: 11400000, guid: 488f4e99c86e8aa49821088839115fdc, type: 2}
   _playerInitialPosition: {x: -2, y: 0, z: 0}
 --- !u!1660057539 &9223372036854775807

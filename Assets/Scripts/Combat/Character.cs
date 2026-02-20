@@ -24,6 +24,7 @@ public class Character : MonoBehaviour
 
     public int life;
     [NonSerialized] public int maxLife;
+    [NonSerialized] public bool isIceWallOn = false;
     [NonSerialized] public bool isDarkShieldOn = false;
     [NonSerialized] public int defense = 0;
 
@@ -41,11 +42,15 @@ public class Character : MonoBehaviour
     private void OnEnable()
     {
         CombatManager.OnRoundEnd += OnRoundEnd_ResetDefense;
+
+        LevelsSystem.OnLevelUp += OnLevelUp_AddStats;
     }
 
     private void OnDisable()
     {
         CombatManager.OnRoundEnd -= OnRoundEnd_ResetDefense;
+
+        LevelsSystem.OnLevelUp -= OnLevelUp_AddStats;
     }
 
     public void SetData(CharacterDataSO dataChar)
@@ -77,6 +82,21 @@ public class Character : MonoBehaviour
     public void OnRoundEnd_ResetDefense()
     {
         defense = 0;
+        isIceWallOn = false;
         isDarkShieldOn = false;
+    }
+
+    public void OnLevelUp_AddStats(int level)
+    {
+        if (!data.isPlayer)
+            return;
+
+        data.defense += data.valueToAddWhenLevelUpDefense;
+        data.attack += data.valueToAddWhenLevelUp;
+        data.life += data.valueToAddWhenLevelUp;
+        data.fireball += data.valueToAddWhenLevelUp;
+        data.darkShield += data.valueToAddWhenLevelUpDefense;
+        data.iceWall += data.valueToAddWhenLevelUpDefense;
+        data.healingRoot += data.valueToAddWhenLevelUpDefense;
     }
 }

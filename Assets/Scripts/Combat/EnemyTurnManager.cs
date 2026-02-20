@@ -72,7 +72,13 @@ public class EnemyTurnManager : MonoBehaviour
 
         if (_action != "healed")
         {
-            int finalDmg = (_attack - _playerAttacked.defense - _playerAttacked.data.iceWall - _playerAttacked.data.darkShield);
+            int finalDmg = (_attack - _playerAttacked.defense);
+
+            if (_playerAttacked.isDarkShieldOn)
+                finalDmg -= _playerAttacked.data.darkShield;
+
+            if (_playerAttacked.isIceWallOn)
+                finalDmg -= _playerAttacked.data.iceWall;
 
             if (finalDmg <= 0)
             {

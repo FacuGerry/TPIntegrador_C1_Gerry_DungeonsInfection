@@ -23,7 +23,7 @@ public class UiCombatText : MonoBehaviour
 
         CombatAction.OnPlayerAttackedEnemy += OnPlayerAttackedEnemy_ChangeText;
 
-        CombatAction.OnPlayerKillEnemyShowText -= OnPlayerKillEnemyShowText_ChangeText;
+        CombatAction.OnPlayerKillEnemyShowText += OnPlayerKillEnemyShowText_ChangeText;
 
         CombatAction.OnPlayerUsedSpell += OnPlayerUsedSpell_ChangeText;
 
@@ -32,6 +32,8 @@ public class UiCombatText : MonoBehaviour
         EnemyTurnManager.OnEnemyTurnStart += OnEnemyTurnStart_ChangeText;
 
         EnemyTurnManager.OnShowEnemyAttacked += OnShowEnemyAttacked_ChangeText;
+
+        UiCombatButtons.OnNotHavingSpells += OnNotHavingSpells_ChangeText;
     }
 
     private void OnDisable()
@@ -61,6 +63,8 @@ public class UiCombatText : MonoBehaviour
         EnemyTurnManager.OnEnemyTurnStart -= OnEnemyTurnStart_ChangeText;
 
         EnemyTurnManager.OnShowEnemyAttacked -= OnShowEnemyAttacked_ChangeText;
+
+        UiCombatButtons.OnNotHavingSpells -= OnNotHavingSpells_ChangeText;
     }
 
     public void OnBattleStart_ChangeText()
@@ -160,5 +164,10 @@ public class UiCombatText : MonoBehaviour
     public void OnPlayerHealedWithDarkShield_ChangeText(Character player)
     {
         _text.text = player.data.name + " absorbed the damage and healed.";
+    }
+
+    public void OnNotHavingSpells_ChangeText()
+    {
+        _text.text = "You don't have spells to use.";
     }
 }

@@ -3,16 +3,23 @@ using UnityEngine.UI;
 
 public class MainMenuParallax : MonoBehaviour
 {
-    [SerializeField] private float _parallaxEfect;
-    private Image _image;
+    [SerializeField] private float _intensity;
+    [SerializeField] private float _smoothSpeed;
 
-    private void Awake()
+    private Vector3 startPosition;
+
+    private void Start()
     {
-        _image = GetComponent<Image>();
+        startPosition = transform.localPosition;
     }
 
     private void Update()
     {
-        _image.rectTransform.position = Input.mousePosition / _parallaxEfect;
+        float mouseX = (Input.mousePosition.x / Screen.width - 0.5f) * 2f;
+        float mouseY = (Input.mousePosition.y / Screen.height - 0.5f) * 2f;
+
+        Vector3 targetPosition = startPosition + new Vector3(mouseX, mouseY) * _intensity;
+
+        transform.localPosition = Vector3.Lerp(transform.localPosition, targetPosition, _smoothSpeed * Time.deltaTime);
     }
 }

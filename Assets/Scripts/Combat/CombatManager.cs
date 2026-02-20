@@ -353,7 +353,7 @@ public class CombatManager : MonoBehaviour
         ChangeState(CombatStates.PlayerSelectHealingRoot);
     }
 
-    private void OnPlayerKillEnemy_RemoveEnemy(Character enemy)
+    public void OnPlayerKillEnemy_RemoveEnemy(Character enemy)
     {
         _turnsList.Remove(enemy);
         _enemiesList.Remove(enemy);
