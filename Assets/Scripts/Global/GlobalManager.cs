@@ -4,7 +4,7 @@ using UnityEngine.SceneManagement;
 
 public class GlobalManager : MonoBehaviour
 {
-    public static GlobalManager Instance;
+    public static GlobalManager instance;
     [NonSerialized] public BattleDefinitionSO currentBattle;
     [SerializeField] private string _sceneToLoadAfterLoading;
     [SerializeField] private string sceneToLoadForCombats;
@@ -13,13 +13,13 @@ public class GlobalManager : MonoBehaviour
 
     private void Awake()
     {
-        if (Instance != null)
+        if (instance != null)
         {
             Destroy(gameObject);
             return;
         }
 
-        Instance = this;
+        instance = this;
         DontDestroyOnLoad(gameObject);
     }
 

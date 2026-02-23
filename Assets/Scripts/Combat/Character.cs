@@ -6,6 +6,7 @@ public class Character : MonoBehaviour
 {
     public static event Action<Character, List<Character>> OnEnemyTurn;
     public static event Action<Character> OnDataSet;
+    public static event Action<Character> OnInfected;
 
     public enum CharacterStates
     {
@@ -20,13 +21,14 @@ public class Character : MonoBehaviour
     private SpriteRenderer _spriteRenderer;
     private Animator _animator;
 
-    private static readonly int state = Animator.StringToHash("State");
+    private static readonly int _state = Animator.StringToHash("State");
 
     public int life;
     [NonSerialized] public int maxLife;
     [NonSerialized] public bool isIceWallOn = false;
     [NonSerialized] public bool isDarkShieldOn = false;
     [NonSerialized] public int defense = 0;
+    [NonSerialized] public bool isInfected = false;
 
     private void Awake()
     {
@@ -43,12 +45,16 @@ public class Character : MonoBehaviour
     {
         CombatManager.OnRoundEnd += OnRoundEnd_ResetDefense;
 
+        CombatManager.OnRoundEnd += OnRoundEnd_Infect;
+
         LevelsSystem.OnLevelUp += OnLevelUp_AddStats;
     }
 
     private void OnDisable()
     {
         CombatManager.OnRoundEnd -= OnRoundEnd_ResetDefense;
+
+        CombatManager.OnRoundEnd -= OnRoundEnd_Infect;
 
         LevelsSystem.OnLevelUp -= OnLevelUp_AddStats;
     }
@@ -68,7 +74,7 @@ public class Character : MonoBehaviour
 
     public void Animate(CharacterStates action)
     {
-        _animator.SetInteger(state, (int)action);
+        _animator.SetInteger(_state, (int)action);
     }
 
     public void InCharacterTurn_Move(List<Character> players)
@@ -86,17 +92,29 @@ public class Character : MonoBehaviour
         isDarkShieldOn = false;
     }
 
+    public void OnRoundEnd_Infect()
+    {
+        if (data.isPlayer && isInfected)
+        {
+            life -= maxLife / 10;
+            OnInfected?.Invoke(this);
+        }
+    }
+
     public void OnLevelUp_AddStats(int level)
     {
         if (!data.isPlayer)
             return;
 
-        data.defense += data.valueToAddWhenLevelUpDefense;
         data.attack += data.valueToAddWhenLevelUp;
         data.life += data.valueToAddWhenLevelUp;
+
+        data.defense += data.valueToAddWhenLevelUpDefense;
+
         data.fireball += data.valueToAddWhenLevelUp;
-        data.darkShield += data.valueToAddWhenLevelUpDefense;
+
         data.iceWall += data.valueToAddWhenLevelUpDefense;
+        data.darkShield += data.valueToAddWhenLevelUpDefense;
         data.healingRoot += data.valueToAddWhenLevelUpDefense;
     }
 }

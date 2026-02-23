@@ -4,7 +4,8 @@ using UnityEngine.SceneManagement;
 
 public class CombatEndChangeScene : MonoBehaviour
 {
-    [SerializeField] private string _sceneToLoad;
+    [SerializeField] private string _sceneOverworld;
+    [SerializeField] private string _sceneLose;
     private IEnumerator _waitingCoroutine;
 
     private void OnEnable()
@@ -12,6 +13,8 @@ public class CombatEndChangeScene : MonoBehaviour
         CombatManager.OnPlayerWin += OnPlayerWin_StartCoroutine;
         CombatManager.OnPlayerLose += OnPlayerLose_StartCoroutine;
         CombatManager.OnPlayerEscaped += OnPlayerEscaped_StartCoroutine;
+
+        CheckAllWinsAndRestart.OnWinGame += OnWinGame_StopCorroutines;
     }
 
     private void OnDisable()
@@ -19,6 +22,8 @@ public class CombatEndChangeScene : MonoBehaviour
         CombatManager.OnPlayerWin -= OnPlayerWin_StartCoroutine;
         CombatManager.OnPlayerLose -= OnPlayerLose_StartCoroutine;
         CombatManager.OnPlayerEscaped -= OnPlayerEscaped_StartCoroutine;
+
+        CheckAllWinsAndRestart.OnWinGame -= OnWinGame_StopCorroutines;
     }
 
     private void OnDestroy()
@@ -26,10 +31,10 @@ public class CombatEndChangeScene : MonoBehaviour
         StopAllCoroutines();
     }
 
-    public IEnumerator WaitingForChange()
+    public IEnumerator WaitingForSceneChange(bool hasLost)
     {
         yield return new WaitForSeconds(2f);
-        SceneManager.LoadScene(_sceneToLoad);
+        SceneManager.LoadScene(hasLost ? _sceneOverworld : _sceneLose);
     }
 
     public void OnPlayerWin_StartCoroutine()
@@ -37,7 +42,7 @@ public class CombatEndChangeScene : MonoBehaviour
         if (_waitingCoroutine != null)
             StopCoroutine(_waitingCoroutine);
 
-        _waitingCoroutine = WaitingForChange();
+        _waitingCoroutine = WaitingForSceneChange(true);
         StartCoroutine(_waitingCoroutine);
     }
 
@@ -46,7 +51,7 @@ public class CombatEndChangeScene : MonoBehaviour
         if (_waitingCoroutine != null)
             StopCoroutine(_waitingCoroutine);
 
-        _waitingCoroutine = WaitingForChange();
+        _waitingCoroutine = WaitingForSceneChange(false);
         StartCoroutine(_waitingCoroutine);
     }
 
@@ -55,7 +60,22 @@ public class CombatEndChangeScene : MonoBehaviour
         if (_waitingCoroutine != null)
             StopCoroutine(_waitingCoroutine);
 
-        _waitingCoroutine = WaitingForChange();
+        _waitingCoroutine = WaitingForSceneChange(true);
         StartCoroutine(_waitingCoroutine);
+    }
+
+    public void OnPlayerWinFinalBattle_StartCoroutine()
+    {
+        if (_waitingCoroutine != null)
+            StopCoroutine(_waitingCoroutine);
+
+        _waitingCoroutine = WaitingForSceneChange(true);
+        StartCoroutine(_waitingCoroutine);
+    }
+
+    public void OnWinGame_StopCorroutines()
+    {
+        if (_waitingCoroutine != null)
+            StopCoroutine(_waitingCoroutine);
     }
 }

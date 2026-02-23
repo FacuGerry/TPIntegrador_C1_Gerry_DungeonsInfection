@@ -6,7 +6,7 @@ public class LevelsSystem : MonoBehaviour
 {
     public static event Action<int> OnLevelUp;
 
-    [SerializeField] private UnlockingSpellsSO _data;
+    [SerializeField] private LevelsSO _data;
 
     private IEnumerator _corroutineLevelUp;
 
@@ -20,11 +20,18 @@ public class LevelsSystem : MonoBehaviour
         CombatManager.OnPlayerWin -= OnPlayerWin_GainXP;
     }
 
+    private void OnDestroy()
+    {
+        StopAllCoroutines();
+    }
+
     private IEnumerator LevelingUp()
     {
         float rand = UnityEngine.Random.value + 1;
 
-        _data.experience += (int)(_data.experienceToGain * rand);
+        _data.levelBeforeBattle = _data.level;
+
+        _data.experience += (int)(_data.experienceToGainAfterBattle * rand);
         if (_data.experience >= _data.experienceToLevelUp)
         {
             while (_data.experience >= _data.experienceToLevelUp)
@@ -33,30 +40,8 @@ public class LevelsSystem : MonoBehaviour
                 _data.experience -= _data.experienceToLevelUp;
                 yield return null;
             }
-
-            if (_data.level >= _data.levelToUnlockFireball && !_data.hasFireball)
-            {
-                _data.hasFireball = true;
-            }
-
-            if (_data.level >= _data.levelToUnlockIceWall && !_data.hasIceWall)
-            {
-                _data.hasIceWall = true;
-            }
-
-            if (_data.level >= _data.levelToUnlockDarkShield && !_data.hasDarkShield)
-            {
-                _data.hasDarkShield = true;
-            }
-
-            if (_data.level >= _data.levelToUnlockHealingRoot && !_data.hasHealingRoot)
-            {
-                _data.hasHealingRoot = true;
-            }
-
-            OnLevelUp?.Invoke(_data.level);
         }
-
+        OnLevelUp?.Invoke(_data.level);
         yield return null;
     }
 

@@ -2,30 +2,19 @@ using System;
 using System.Collections;
 using UnityEngine;
 
-public class CombatAction : MonoBehaviour
+public partial class CombatAction : MonoBehaviour
 {
     public static event Action OnPlayerEndTurn;
 
     public static event Action OnPlayerSelectEnemy;
     public static event Action<Character, Character> OnPlayerAttackedEnemy;
     public static event Action<Character> OnPlayerKillEnemy;
-    public static event Action<Character> OnPlayerKillEnemyShowText;
 
     public static event Action<Character> OnUpdateEnemyLife;
 
     public static event Action<Character, Spells> OnPlayerUsedSpell;
     public static event Action<Character, Character> OnPlayerUsedSpellAnimate;
     public static event Action<Character> OnPlayerHealedWithDarkShield;
-
-    public enum Spells
-    {
-        None = 0,
-        Defend,
-        Fireball,
-        IceWall,
-        DarkShield,
-        HealingRoot
-    }
 
     private Spells _spells = Spells.None;
 
@@ -86,7 +75,6 @@ public class CombatAction : MonoBehaviour
                     {
                         OnPlayerKillEnemy?.Invoke(enemy);
                         yield return new WaitForSeconds(1f);
-                        OnPlayerKillEnemyShowText?.Invoke(enemy);
                     }
 
                     isWaiting = false;

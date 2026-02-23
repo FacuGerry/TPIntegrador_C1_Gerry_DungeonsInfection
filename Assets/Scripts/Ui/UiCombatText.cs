@@ -23,7 +23,7 @@ public class UiCombatText : MonoBehaviour
 
         CombatAction.OnPlayerAttackedEnemy += OnPlayerAttackedEnemy_ChangeText;
 
-        CombatAction.OnPlayerKillEnemyShowText += OnPlayerKillEnemyShowText_ChangeText;
+        CombatAction.OnPlayerKillEnemy += OnPlayerKillEnemy_ChangeText;
 
         CombatAction.OnPlayerUsedSpell += OnPlayerUsedSpell_ChangeText;
 
@@ -34,6 +34,8 @@ public class UiCombatText : MonoBehaviour
         EnemyTurnManager.OnShowEnemyAttacked += OnShowEnemyAttacked_ChangeText;
 
         UiCombatButtons.OnNotHavingSpells += OnNotHavingSpells_ChangeText;
+
+        Character.OnInfected += OnInfected_ChangeText;
     }
 
     private void OnDisable()
@@ -54,7 +56,7 @@ public class UiCombatText : MonoBehaviour
 
         CombatAction.OnPlayerAttackedEnemy -= OnPlayerAttackedEnemy_ChangeText;
 
-        CombatAction.OnPlayerKillEnemyShowText -= OnPlayerKillEnemyShowText_ChangeText;
+        CombatAction.OnPlayerKillEnemy -= OnPlayerKillEnemy_ChangeText;
 
         CombatAction.OnPlayerUsedSpell -= OnPlayerUsedSpell_ChangeText;
 
@@ -65,6 +67,8 @@ public class UiCombatText : MonoBehaviour
         EnemyTurnManager.OnShowEnemyAttacked -= OnShowEnemyAttacked_ChangeText;
 
         UiCombatButtons.OnNotHavingSpells -= OnNotHavingSpells_ChangeText;
+
+        Character.OnInfected -= OnInfected_ChangeText;
     }
 
     public void OnBattleStart_ChangeText()
@@ -90,7 +94,7 @@ public class UiCombatText : MonoBehaviour
 
     public void OnPlayerWin_ChangeText()
     {
-        _text.text = "You win!!!";
+        _text.text = "You win!!!\nGoing back to the dungeon...";
     }
 
     public void OnPlayerEscaped_ChangeText()
@@ -126,7 +130,7 @@ public class UiCombatText : MonoBehaviour
         _text.text = player.data.name + " attacked " + enemy.data.name;
     }
 
-    public void OnPlayerKillEnemyShowText_ChangeText(Character enemy)
+    public void OnPlayerKillEnemy_ChangeText(Character enemy)
     {
         _text.text = enemy.data.name + " was slain.";
     }
@@ -169,5 +173,10 @@ public class UiCombatText : MonoBehaviour
     public void OnNotHavingSpells_ChangeText()
     {
         _text.text = "You don't have spells to use.";
+    }
+
+    public void OnInfected_ChangeText(Character player)
+    {
+        _text.text = player.name + " is damaged by infection.";
     }
 }

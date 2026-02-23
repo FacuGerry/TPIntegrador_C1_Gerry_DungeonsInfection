@@ -9,9 +9,6 @@ public class KeyBindingsSO : ScriptableObject
     public KeyCode down;
     public KeyCode right;
 
-    [Header("Open Map")]
-    public KeyCode openMap;
-
     [Header("Interact / Use")]
     public KeyCode interact;
 

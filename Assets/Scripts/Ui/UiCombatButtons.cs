@@ -1,5 +1,4 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
@@ -37,7 +36,8 @@ public class UiCombatButtons : MonoBehaviour
     [Header("Spell Buttons Unlocking")]
     [SerializeField] private UnlockingSpellsSO _spellsUnlocked;
 
-    private List<Character> _enemies;
+    private bool _isActionsPaused = false;
+    private bool _isSpellsPaused = false;
 
     private void Start()
     {
@@ -58,11 +58,15 @@ public class UiCombatButtons : MonoBehaviour
     private void OnEnable()
     {
         CombatManager.OnPlayerTurn += OnPlayerTurn_ShowActionButtons;
+
+        PauseGame.OnPausingCombat += OnPause_ChangeButtons;
     }
 
     private void OnDisable()
     {
         CombatManager.OnPlayerTurn -= OnPlayerTurn_ShowActionButtons;
+
+        PauseGame.OnPausingCombat -= OnPause_ChangeButtons;
     }
 
     private void OnDestroy()
@@ -85,6 +89,38 @@ public class UiCombatButtons : MonoBehaviour
         _canvasActions.blocksRaycasts = isOn;
     }
 
+    public void OnPlayerTurn_ShowActionButtons()
+    {
+        ToogleActionButtons(true);
+    }
+
+    public void OnPause_ChangeButtons()
+    {
+        if (_canvasActions.alpha == 1f)
+        {
+            _isActionsPaused = true;
+            ToogleActionButtons(false);
+            return;
+        }
+        if (_canvasSpells.alpha == 1f) 
+        {
+            _isSpellsPaused = true;
+            ToogleSpellsButtons(false);
+            return;
+        }
+
+        if (_isActionsPaused)
+        {
+            _isActionsPaused = false;
+            ToogleActionButtons(true);
+        }
+        if (_isSpellsPaused)
+        {
+            _isSpellsPaused = false;
+            ToogleSpellsButtons(true);
+        }
+    }
+
     public void ToogleSpellsButtons(bool isOn)
     {
         if (!_spellsUnlocked.hasFireball && isOn)
@@ -102,11 +138,6 @@ public class UiCombatButtons : MonoBehaviour
         _canvasSpells.alpha = isOn ? 1f : 0f;
         _canvasSpells.interactable = isOn;
         _canvasSpells.blocksRaycasts = isOn;
-    }
-
-    public void OnPlayerTurn_ShowActionButtons()
-    {
-        ToogleActionButtons(true);
     }
 
     public void AttackClicked()

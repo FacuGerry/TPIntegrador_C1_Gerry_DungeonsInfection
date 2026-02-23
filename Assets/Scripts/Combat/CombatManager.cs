@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class CombatManager : MonoBehaviour
+public partial class CombatManager : MonoBehaviour
 {
     public static event Action OnBattleStart;
     public static event Action OnWaitingForNewTurn;
@@ -19,26 +19,6 @@ public class CombatManager : MonoBehaviour
     public static event Action<Character> OnIndicationsChange;
 
     public static event Action OnRoundEnd;
-
-    public enum CombatStates
-    {
-        None,
-        Start,
-        ChangeTurn,
-        EnemyTurn,
-        PlayerSelectAction,
-        PlayerSelectAttack,
-        PlayerSelectDefend,
-        PlayerSelectFireball,
-        PlayerSelectIceWall,
-        PlayerSelectDarkShield,
-        PlayerSelectHealingRoot,
-        PlayerSelectRun,
-        Animate,
-        Won,
-        Lost,
-        Escaped
-    }
 
     private BattleDefinitionSO _battle;
     private CombatStates _state;
@@ -65,6 +45,7 @@ public class CombatManager : MonoBehaviour
 
     private IEnumerator _waitingToStartCoroutine;
     private IEnumerator _waitingCoroutine;
+    private IEnumerator _waitingWinCoroutine;
 
     private void Awake()
     {
@@ -74,7 +55,7 @@ public class CombatManager : MonoBehaviour
 
     private void Start()
     {
-        _battle = GlobalManager.Instance.currentBattle;
+        _battle = GlobalManager.instance.currentBattle;
         if (_battle == null)
         {
             Debug.LogError("THERE WAS AN ERROR IN THE COMBAT'S LOAD");
@@ -142,6 +123,12 @@ public class CombatManager : MonoBehaviour
     {
         yield return new WaitForSeconds(seconds);
         ChangeState(CombatStates.ChangeTurn);
+    }
+
+    private IEnumerator WaitingForWin()
+    {
+        yield return new WaitForSeconds(1.5f);
+        ChangeState(CombatStates.Won);
     }
 
     public void ChangeState(CombatStates newState)
@@ -215,13 +202,11 @@ public class CombatManager : MonoBehaviour
                 WaitForSecondsAndChangeTurn(1f);
                 break;
 
-            case CombatStates.Animate:
-                break;
-
             case CombatStates.Won:
-                OnPlayerWin?.Invoke();
                 _battle.isWon = true;
-                break;
+                _state = CombatStates.None;
+                OnPlayerWin?.Invoke();
+                return;
 
             case CombatStates.Lost:
                 foreach (Character player in _playersList)
@@ -359,7 +344,11 @@ public class CombatManager : MonoBehaviour
         _enemiesList.Remove(enemy);
         if (_enemiesList.Count == 0)
         {
-            ChangeState(CombatStates.Won);
+            if (_waitingWinCoroutine != null)
+                StopCoroutine(_waitingWinCoroutine);
+
+            _waitingWinCoroutine = WaitingForWin();
+            StartCoroutine(_waitingWinCoroutine);
         }
     }
 

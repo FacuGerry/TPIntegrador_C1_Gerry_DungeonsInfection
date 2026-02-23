@@ -23,6 +23,7 @@ public class EnemyTurnManager : MonoBehaviour
     private string _action;
 
     private IEnumerator _courroutineInfectedAttack;
+    private IEnumerator _courroutineVirusAttack;
 
     private void OnEnable()
     {
@@ -68,6 +69,7 @@ public class EnemyTurnManager : MonoBehaviour
             // infect
             _action = "infected";
             _attack = ((_battleDefinition.battleLevel / 10) + 1) * _infectedAttacks.infect;
+            _playerAttacked.isInfected = true;
         }
 
         if (_action != "healed")
@@ -118,6 +120,55 @@ public class EnemyTurnManager : MonoBehaviour
         }
     }
 
+    private IEnumerator VirusAttack(Character enemy)
+    {
+
+
+        int finalDmg = (_attack - _playerAttacked.defense);
+
+        if (_playerAttacked.isDarkShieldOn)
+            finalDmg -= _playerAttacked.data.darkShield;
+
+        if (_playerAttacked.isIceWallOn)
+            finalDmg -= _playerAttacked.data.iceWall;
+
+        if (finalDmg <= 0)
+        {
+            _attack = 0;
+            _action = "failed to attack";
+        }
+        else
+            _attack = finalDmg;
+
+        _playerAttacked.life -= _attack;
+
+        if (_playerAttacked.life <= 0)
+            _playerAttacked.life = 0;
+
+
+        _attack = enemy.data.attack;
+        OnEnemyAttack?.Invoke(_playerAttacked);
+        if (_playerAttacked.isDarkShieldOn)
+        {
+            OnPlayerUsedDarkShield?.Invoke(_playerAttacked);
+        }
+
+        OnShowEnemyAttacked?.Invoke(enemy.data, _playerAttacked, _action);
+
+        if (_action != "failed to attack")
+            OnAnimateEnemyAttack?.Invoke(enemy, _playerAttacked);
+
+        if (_playerAttacked.life <= 0)
+        {
+            OnEnemyKilledPlayer?.Invoke();
+            yield return null;
+        }
+
+        yield return new WaitForSeconds(1f);
+
+        OnEnemyAttackEnd?.Invoke();
+    }
+
     public void SetData(BattleDefinitionSO battleData)
     {
         _battleDefinition = battleData;
@@ -152,6 +203,11 @@ public class EnemyTurnManager : MonoBehaviour
                 StartCoroutine(_courroutineInfectedAttack);
                 break;
             case "Virus":
+                    if (_courroutineVirusAttack != null)
+                    StopCoroutine(_courroutineVirusAttack);
+
+                _courroutineVirusAttack = VirusAttack(enemy);
+                StartCoroutine(_courroutineVirusAttack);
                 break;
         }
     }
