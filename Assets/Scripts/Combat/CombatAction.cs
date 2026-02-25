@@ -4,147 +4,217 @@ using UnityEngine;
 
 public partial class CombatAction : MonoBehaviour
 {
-    public static event Action OnPlayerEndTurn;
+	public static event Action OnPlayerEndTurn;
 
-    public static event Action OnPlayerSelectEnemy;
-    public static event Action<Character, Character> OnPlayerAttackedEnemy;
-    public static event Action<Character> OnPlayerKillEnemy;
+	public static event Action OnPlayerSelectEnemy;
+	public static event Action<Character, Character> OnPlayerAttackedEnemy;
+	public static event Action<Character> OnPlayerKillEnemy;
 
-    public static event Action<Character> OnUpdateEnemyLife;
+	public static event Action<Character> OnUpdateEnemyLife;
 
-    public static event Action<Character, Spells> OnPlayerUsedSpell;
-    public static event Action<Character, Character> OnPlayerUsedSpellAnimate;
-    public static event Action<Character> OnPlayerHealedWithDarkShield;
+	public static event Action<Character, Spells> OnPlayerUsedSpell;
+	public static event Action<Character, Character> OnPlayerUsedSpellAnimate;
+	public static event Action<Character> OnPlayerHealedWithAbsorb;
 
-    private Spells _spells = Spells.None;
+	public static event Action<Character> OnFailedToCast;
 
-    private IEnumerator _corroutineSelectEnemy;
+	private Spells _spells = Spells.None;
 
-    private bool _isFireball = false;
+	private IEnumerator _coroutineSelectEnemy;
+	private IEnumerator _coroutineFailedToCast;
 
-    private void OnEnable()
-    {
-        EnemyTurnManager.OnPlayerUsedDarkShield += OnPlayerUsedDarkShield_AddLife;
-    }
+	private bool _isFireball = false;
 
-    private void OnDisable()
-    {
-        EnemyTurnManager.OnPlayerUsedDarkShield += OnPlayerUsedDarkShield_AddLife;
-    }
+	private void OnEnable()
+	{
+		EnemyTurnManager.OnPlayerUsedAbsorb += OnPlayerUsedAbsorb_AddLife;
+		CombatManager.OnWaitingForWin += OnWin_StopCoroutine;
+	}
 
-    private void OnDestroy()
-    {
-        StopAllCoroutines();
-        _corroutineSelectEnemy = null;
-    }
+	private void OnDisable()
+	{
+		EnemyTurnManager.OnPlayerUsedAbsorb += OnPlayerUsedAbsorb_AddLife;
+		CombatManager.OnWaitingForWin -= OnWin_StopCoroutine;
+	}
 
-    private IEnumerator WatingForInput(Character player)
-    {
-        OnPlayerSelectEnemy?.Invoke();
-        bool isWaiting = true;
-        while (isWaiting)
-        {
-            if (Input.GetMouseButtonDown(0))
-            {
-                Vector3 direction = new Vector3(Input.mousePosition.x, Input.mousePosition.y, -10);
-                Vector2 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+	private void OnDestroy()
+	{
+		StopAllCoroutines();
+		_coroutineSelectEnemy = null;
+	}
 
-                RaycastHit2D ray = Physics2D.Raycast(mousePos, direction);
+	private IEnumerator WatingForInput(Character player)
+	{
+		OnPlayerSelectEnemy?.Invoke();
+		bool isWaiting = true;
+		while (isWaiting)
+		{
+			if (Input.GetMouseButtonDown(0))
+			{
+				Vector3 direction = new Vector3(Input.mousePosition.x, Input.mousePosition.y, -10);
+				Vector2 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
 
-                if (ray.collider != null && ray.collider.TryGetComponent(out Character enemy))
-                {
-                    if (_isFireball)
-                    {
-                        enemy.life -= player.data.fireball;
-                        OnPlayerUsedSpell?.Invoke(player, _spells);
-                        _spells = Spells.None;
-                        _isFireball = false;
-                        OnPlayerUsedSpellAnimate?.Invoke(player, enemy);
-                    }
-                    else
-                    {
-                        enemy.life -= player.data.attack;
-                        OnPlayerAttackedEnemy?.Invoke(player, enemy);
-                    }
+				RaycastHit2D ray = Physics2D.Raycast(mousePos, direction);
 
-                    OnUpdateEnemyLife?.Invoke(enemy);
+				if (ray.collider != null && ray.collider.TryGetComponent(out Character enemy))
+				{
+					if (_isFireball)
+					{
+						enemy.life -= player.data.fireball;
+						OnPlayerUsedSpell?.Invoke(player, _spells);
+						_spells = Spells.None;
+						_isFireball = false;
+						OnPlayerUsedSpellAnimate?.Invoke(player, enemy);
+					}
+					else
+					{
+						enemy.life -= player.data.attack;
+						OnPlayerAttackedEnemy?.Invoke(player, enemy);
+					}
 
-                    Debug.Log(enemy.name + " life is " + enemy.life, enemy.gameObject);
+					OnUpdateEnemyLife?.Invoke(enemy);
 
-                    if (enemy.life <= 0)
-                    {
-                        OnPlayerKillEnemy?.Invoke(enemy);
-                        yield return new WaitForSeconds(1f);
-                    }
+					Debug.Log(enemy.name + " life is " + enemy.life, enemy.gameObject);
 
-                    isWaiting = false;
-                }
-            }
-            yield return null;
-        }
-        yield return new WaitForSeconds(1f);
-        OnPlayerEndTurn?.Invoke();
-    }
+					if (enemy.life <= 0)
+					{
+						OnPlayerKillEnemy?.Invoke(enemy);
+						yield return new WaitForSeconds(1f);
+					}
 
-    public void PlayerSelectEnemy(Character player)
-    {
-        if (_corroutineSelectEnemy != null)
-            StopCoroutine(_corroutineSelectEnemy);
+					isWaiting = false;
+				}
+			}
+			yield return null;
+		}
+		yield return new WaitForSeconds(1f);
+		OnPlayerEndTurn?.Invoke();
+	}
 
-        _corroutineSelectEnemy = WatingForInput(player);
-        StartCoroutine(_corroutineSelectEnemy);
-    }
+	private IEnumerator FailingToCast(Character player)
+	{
+		OnFailedToCast?.Invoke(player);
+		yield return new WaitForSeconds(1f);
+		OnPlayerEndTurn?.Invoke();
+	}
 
-    public void AddDefense(Character player)
-    {
-        player.defense += player.data.defense;
-        _spells = Spells.Defend;
-        OnPlayerUsedSpell?.Invoke(player, _spells);
-        _spells = Spells.None;
-    }
+	public void OnPlayerUsedAbsorb_AddLife(Character player)
+	{
+		player.life += player.data.absorb;
+		player.isAbsorbOn = false;
+		if (player.life > player.maxLife)
+			player.life = player.maxLife;
 
-    public void UseFireball(Character player)
-    {
-        _isFireball = true;
-        PlayerSelectEnemy(player);
-        _spells = Spells.Fireball;
-    }
+		OnPlayerHealedWithAbsorb?.Invoke(player);
+	}
 
-    public void UseIceWall(Character player)
-    {
-        player.defense += player.data.iceWall;
-        player.isIceWallOn = true;
-        _spells = Spells.IceWall;
-        OnPlayerUsedSpell?.Invoke(player, _spells);
-        _spells = Spells.None;
-    }
+	public void OnWin_StopCoroutine()
+	{
+		StopAllCoroutines();
+	}
 
-    public void UseDarkShield(Character player)
-    {
-        player.defense += player.data.darkShield;
-        player.isDarkShieldOn = true;
-        _spells = Spells.DarkShield;
-        OnPlayerUsedSpell?.Invoke(player, _spells);
-        _spells = Spells.None;
-    }
+	public bool TryToCast(Character player)
+	{
+		float rand = UnityEngine.Random.value;
+		if (rand > player.data.chanceToCastSpell)
+			return true;
+		else
+			return false;
+	}
 
-    public void UseHealingRoot(Character player)
-    {
-        player.life += player.data.healingRoot;
-        if (player.life > player.maxLife)
-            player.life = player.maxLife;
-        _spells = Spells.HealingRoot;
-        OnPlayerUsedSpell?.Invoke(player, _spells);
-        _spells = Spells.None;
-    }
+	public void PlayerSelectEnemy(Character player)
+	{
+		if (_coroutineSelectEnemy != null)
+			StopCoroutine(_coroutineSelectEnemy);
 
-    public void OnPlayerUsedDarkShield_AddLife(Character player)
-    {
-        player.life += player.data.darkShield;
-        player.isDarkShieldOn = false;
-        if (player.life > player.maxLife)
-            player.life = player.maxLife;
+		_coroutineSelectEnemy = WatingForInput(player);
+		StartCoroutine(_coroutineSelectEnemy);
+	}
 
-        OnPlayerHealedWithDarkShield?.Invoke(player);
-    }
+	public void AddDefense(Character player)
+	{
+		player.defense += player.data.defense;
+		_spells = Spells.Defend;
+		OnPlayerUsedSpell?.Invoke(player, _spells);
+		_spells = Spells.None;
+	}
+
+	public void UseFireball(Character player)
+	{
+		if (TryToCast(player))
+		{
+			_isFireball = true;
+			PlayerSelectEnemy(player);
+			_spells = Spells.Fireball;
+		}
+		else
+		{
+			if (_coroutineFailedToCast != null)
+				StopCoroutine(_coroutineFailedToCast);
+
+			_coroutineFailedToCast = FailingToCast(player);
+			StartCoroutine(_coroutineFailedToCast);
+		}
+	}
+
+	public void UseMagicShield(Character player)
+	{
+		if (TryToCast(player))
+		{
+			player.defense += player.data.magicShield;
+			player.isMagicShieldOn = true;
+			_spells = Spells.MagicShield;
+			OnPlayerUsedSpell?.Invoke(player, _spells);
+			_spells = Spells.None;
+		}
+		else
+		{
+			if (_coroutineFailedToCast != null)
+				StopCoroutine(_coroutineFailedToCast);
+
+			_coroutineFailedToCast = FailingToCast(player);
+			StartCoroutine(_coroutineFailedToCast);
+		}
+	}
+
+	public void UseAbsorb(Character player)
+	{
+		if (TryToCast(player))
+		{
+			player.defense += player.data.absorb;
+			player.isAbsorbOn = true;
+			_spells = Spells.Absorb;
+			OnPlayerUsedSpell?.Invoke(player, _spells);
+			_spells = Spells.None;
+		}
+		else
+		{
+			if (_coroutineFailedToCast != null)
+				StopCoroutine(_coroutineFailedToCast);
+
+			_coroutineFailedToCast = FailingToCast(player);
+			StartCoroutine(_coroutineFailedToCast);
+		}
+	}
+
+	public void UseHeal(Character player)
+	{
+		if (TryToCast(player))
+		{
+			player.life += player.data.heal;
+			if (player.life > player.maxLife)
+				player.life = player.maxLife;
+			_spells = Spells.Heal;
+			OnPlayerUsedSpell?.Invoke(player, _spells);
+			_spells = Spells.None;
+		}
+		else
+		{
+			if (_coroutineFailedToCast != null)
+				StopCoroutine(_coroutineFailedToCast);
+
+			_coroutineFailedToCast = FailingToCast(player);
+			StartCoroutine(_coroutineFailedToCast);
+		}
+	}
 }

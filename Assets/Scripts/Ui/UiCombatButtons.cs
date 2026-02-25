@@ -11,9 +11,9 @@ public class UiCombatButtons : MonoBehaviour
     public static event Action OnEscapeClicked;
 
     public static event Action OnFireballClicked;
-    public static event Action OnIceWallClicked;
-    public static event Action OnDarkShieldClicked;
-    public static event Action OnHealingRootClicked;
+    public static event Action OnMagicShieldClicked;
+    public static event Action OnAbsorbClicked;
+    public static event Action OnHealClicked;
 
     public static event Action OnNotHavingSpells;
 
@@ -25,9 +25,9 @@ public class UiCombatButtons : MonoBehaviour
 
     [Header("Spell Buttons")]
     [SerializeField] private Button _fireballBtn;
-    [SerializeField] private Button _iceWallBtn;
-    [SerializeField] private Button _darkShieldBtn;
-    [SerializeField] private Button _healingRootBtn;
+    [SerializeField] private Button _magicShieldBtn;
+    [SerializeField] private Button _absorbBtn;
+    [SerializeField] private Button _healBtn;
 
     [Header("Canvas Groups")]
     [SerializeField] private CanvasGroup _canvasActions;
@@ -47,9 +47,9 @@ public class UiCombatButtons : MonoBehaviour
         _escapeBtn.onClick.AddListener(EscapeClicked);
 
         _fireballBtn.onClick.AddListener(FireballClicked);
-        _iceWallBtn.onClick.AddListener(IceWallClicked);
-        _darkShieldBtn.onClick.AddListener(DarkShieldClicked);
-        _healingRootBtn.onClick.AddListener(HealingRootClicked);
+        _magicShieldBtn.onClick.AddListener(MagicShieldClicked);
+        _absorbBtn.onClick.AddListener(AbsorbClicked);
+        _healBtn.onClick.AddListener(HealClicked);
 
         ToogleActionButtons(false);
         ToogleSpellsButtons(false);
@@ -77,9 +77,9 @@ public class UiCombatButtons : MonoBehaviour
         _escapeBtn.onClick.RemoveAllListeners();
 
         _fireballBtn.onClick.RemoveAllListeners();
-        _iceWallBtn.onClick.RemoveAllListeners();
-        _darkShieldBtn.onClick.RemoveAllListeners();
-        _healingRootBtn.onClick.RemoveAllListeners();
+        _magicShieldBtn.onClick.RemoveAllListeners();
+        _absorbBtn.onClick.RemoveAllListeners();
+        _healBtn.onClick.RemoveAllListeners();
     }
 
     public void ToogleActionButtons(bool isOn)
@@ -123,7 +123,7 @@ public class UiCombatButtons : MonoBehaviour
 
     public void ToogleSpellsButtons(bool isOn)
     {
-        if (!_spellsUnlocked.hasFireball && isOn)
+        if (!_spellsUnlocked.hasFireball && !_spellsUnlocked.hasMagicShield && !_spellsUnlocked.hasAbsorb && !_spellsUnlocked.hasHeal && isOn)
         {
             ToogleActionButtons(true);
             OnNotHavingSpells?.Invoke();
@@ -131,9 +131,9 @@ public class UiCombatButtons : MonoBehaviour
         }
 
         _fireballBtn.gameObject.SetActive(_spellsUnlocked.hasFireball);
-        _iceWallBtn.gameObject.SetActive(_spellsUnlocked.hasIceWall);
-        _darkShieldBtn.gameObject.SetActive(_spellsUnlocked.hasDarkShield);
-        _healingRootBtn.gameObject.SetActive(_spellsUnlocked.hasHealingRoot);
+        _magicShieldBtn.gameObject.SetActive(_spellsUnlocked.hasMagicShield);
+        _absorbBtn.gameObject.SetActive(_spellsUnlocked.hasAbsorb);
+        _healBtn.gameObject.SetActive(_spellsUnlocked.hasHeal);
 
         _canvasSpells.alpha = isOn ? 1f : 0f;
         _canvasSpells.interactable = isOn;
@@ -171,21 +171,21 @@ public class UiCombatButtons : MonoBehaviour
         OnFireballClicked?.Invoke();
     }
 
-    public void IceWallClicked()
+    public void MagicShieldClicked()
     {
         ToogleSpellsButtons(false);
-        OnIceWallClicked?.Invoke();
+        OnMagicShieldClicked?.Invoke();
     }
 
-    public void DarkShieldClicked()
+    public void AbsorbClicked()
     {
         ToogleSpellsButtons(false);
-        OnDarkShieldClicked?.Invoke();
+        OnAbsorbClicked?.Invoke();
     }
 
-    public void HealingRootClicked()
+    public void HealClicked()
     {
         ToogleSpellsButtons(false);
-        OnHealingRootClicked?.Invoke();
+        OnHealClicked?.Invoke();
     }
 }

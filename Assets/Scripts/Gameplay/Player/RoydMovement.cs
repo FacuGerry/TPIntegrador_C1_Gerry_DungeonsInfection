@@ -5,6 +5,8 @@ using UnityEngine;
 public class RoydMovement : MonoBehaviour
 {
     public static event Action<int> OnAnimate;
+    public static event Action OnPlayerMoves;
+    public static event Action OnPlayerStopsMoving;
 
     public enum Actions
     {
@@ -82,6 +84,7 @@ public class RoydMovement : MonoBehaviour
                     _previousAction = _currentAction;
                     SetVelocity();
                     OnAnimate?.Invoke((int)_currentAction);
+                    OnPlayerStopsMoving?.Invoke();
                 }
 
                 // Update
@@ -106,6 +109,7 @@ public class RoydMovement : MonoBehaviour
                     _previousAction = _currentAction;
                     SetVelocity();
                     OnAnimate?.Invoke((int)_currentAction);
+                    OnPlayerStopsMoving?.Invoke();
                 }
 
                 // Update
@@ -130,6 +134,7 @@ public class RoydMovement : MonoBehaviour
                     _previousAction = _currentAction;
                     SetVelocity();
                     OnAnimate?.Invoke((int)_currentAction);
+                    OnPlayerStopsMoving?.Invoke();
                 }
 
                 // Update
@@ -153,6 +158,7 @@ public class RoydMovement : MonoBehaviour
                 {
                     _previousAction = _currentAction;
                     OnAnimate?.Invoke((int)_currentAction);
+                    OnPlayerMoves?.Invoke();
                 }
 
                 // Update
@@ -162,11 +168,11 @@ public class RoydMovement : MonoBehaviour
                 {
                     _currentAction = Actions.IdleSide;
                 }
-                else if (Input.GetKey(_keyBindings.up))
+                else if (Input.GetKey(_keyBindings.up) && !Input.GetKey(_keyBindings.left) && !Input.GetKey(_keyBindings.right))
                 {
                     _currentAction = Actions.MoveUp;
                 }
-                else if (Input.GetKey(_keyBindings.down))
+                else if (Input.GetKey(_keyBindings.down) && !Input.GetKey(_keyBindings.left) && !Input.GetKey(_keyBindings.right))
                 {
                     _currentAction = Actions.MoveDown;
                 }
@@ -178,6 +184,7 @@ public class RoydMovement : MonoBehaviour
                 {
                     _previousAction = _currentAction;
                     OnAnimate?.Invoke((int)_currentAction);
+                    OnPlayerMoves?.Invoke();
                 }
 
                 // Update
@@ -187,11 +194,11 @@ public class RoydMovement : MonoBehaviour
                 {
                     _currentAction = Actions.IdleUp;
                 }
-                else if (Input.GetKey(_keyBindings.left) || Input.GetKey(_keyBindings.right))
+                else if ((Input.GetKey(_keyBindings.left) || Input.GetKey(_keyBindings.right)) && !Input.GetKey(_keyBindings.up))
                 {
                     _currentAction = Actions.MoveSide;
                 }
-                else if (Input.GetKey(_keyBindings.down))
+                else if (Input.GetKey(_keyBindings.down) && !Input.GetKey(_keyBindings.up))
                 {
                     _currentAction = Actions.MoveDown;
                 }
@@ -203,6 +210,7 @@ public class RoydMovement : MonoBehaviour
                 {
                     _previousAction = _currentAction;
                     OnAnimate?.Invoke((int)_currentAction);
+                    OnPlayerMoves?.Invoke();
                 }
 
                 // Update
@@ -212,11 +220,11 @@ public class RoydMovement : MonoBehaviour
                 {
                     _currentAction = Actions.IdleDown;
                 }
-                else if (Input.GetKey(_keyBindings.left) || Input.GetKey(_keyBindings.right))
+                else if ((Input.GetKey(_keyBindings.left) || Input.GetKey(_keyBindings.right)) && !Input.GetKey(_keyBindings.down))
                 {
                     _currentAction = Actions.MoveSide;
                 }
-                else if (Input.GetKey(_keyBindings.up))
+                else if (Input.GetKey(_keyBindings.up) && !Input.GetKey(_keyBindings.down))
                 {
                     _currentAction = Actions.MoveUp;
                 }
@@ -233,14 +241,14 @@ public class RoydMovement : MonoBehaviour
     {
         _rb.velocity = Vector2.zero;
 
-        if (Input.GetKey(_keyBindings.left))
+        if (Input.GetKey(_keyBindings.left) && !Input.GetKey(_keyBindings.right))
         {
             if (transform.rotation.y != 0)
                 transform.rotation = Quaternion.Euler(0, 0, 0);
             _rb.AddForce(Vector2.left * speed, ForceMode2D.Force);
         }
 
-        if (Input.GetKey(_keyBindings.right))
+        if (Input.GetKey(_keyBindings.right) && !Input.GetKey(_keyBindings.left))
         {
             if (transform.rotation.y != 180)
                 transform.rotation = Quaternion.Euler(0, 180, 0);

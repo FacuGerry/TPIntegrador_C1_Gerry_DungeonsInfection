@@ -5,8 +5,8 @@ public partial class CombatAction
         None = 0,
         Defend,
         Fireball,
-        IceWall,
-        DarkShield,
-        HealingRoot
+        MagicShield,
+        Absorb,
+        Heal
     }
 }

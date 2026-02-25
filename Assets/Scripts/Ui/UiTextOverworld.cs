@@ -13,7 +13,7 @@ public class UiTextOverworld : MonoBehaviour
     [SerializeField] private TextMeshProUGUI _textLevel;
     [SerializeField] private TextMeshProUGUI _textSpells;
 
-    private IEnumerator _corroutine;
+    private IEnumerator _coroutine;
 
     private void Awake()
     {
@@ -57,15 +57,15 @@ public class UiTextOverworld : MonoBehaviour
 
     public void OnLevelUp_ShowText(int level)
     {
-        _textLevel.text += level.ToString();
+        _textLevel.text += level.ToString() + "\nYou now feel stronger...";
         _textLevel.gameObject.SetActive(true);
         CanvasAppear(true);
 
-        if (_corroutine != null)
-            StopCoroutine(_corroutine);
+        if (_coroutine != null)
+            StopCoroutine(_coroutine);
 
-        _corroutine = WaitingForInput();
-        StartCoroutine(_corroutine);
+        _coroutine = WaitingForInput();
+        StartCoroutine(_coroutine);
     }
 
     public void OnBookObtained_ShowText(CombatAction.Spells spell)
@@ -75,25 +75,25 @@ public class UiTextOverworld : MonoBehaviour
             case CombatAction.Spells.Fireball:
                 _textSpells.text += "Fireball\nUse it to attack your opponent";
                 break;
-            case CombatAction.Spells.IceWall:
-                _textSpells.text += "Ice Wall\nUse it to defend yourself even more";
+            case CombatAction.Spells.MagicShield:
+                _textSpells.text += "Magic Shield\nUse it to defend yourself even more";
                 break;
-            case CombatAction.Spells.DarkShield:
-                _textSpells.text += "Dark Shield\nUse it to defend AND heal yourself (if damaged)";
+            case CombatAction.Spells.Absorb:
+                _textSpells.text += "Absorb\nUse it to defend AND heal yourself (if damaged)";
                 break;
-            case CombatAction.Spells.HealingRoot:
-                _textSpells.text += "Healing Root­\nUse it to heal yourself";
+            case CombatAction.Spells.Heal:
+                _textSpells.text += "Heal­\nUse it to heal yourself";
                 break;
         }
 
         _textSpells.gameObject.SetActive(true);
         CanvasAppear(true);
 
-        if (_corroutine != null)
-            StopCoroutine(_corroutine);
+        if (_coroutine != null)
+            StopCoroutine(_coroutine);
 
-        _corroutine = WaitingForInput();
-        StartCoroutine(_corroutine);
+        _coroutine = WaitingForInput();
+        StartCoroutine(_coroutine);
     }
 
     public void CanvasAppear(bool isOn)

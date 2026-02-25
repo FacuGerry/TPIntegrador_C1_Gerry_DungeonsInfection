@@ -9,8 +9,8 @@ public class UiCreditsMainMenu : MonoBehaviour
     [SerializeField] private float _fadeDuration;
     private CanvasGroup _canvasCredits;
 
-    private IEnumerator _fadingCorroutine;
-    private IEnumerator _fadingBackCorroutine;
+    private IEnumerator _fadingCoroutine;
+    private IEnumerator _fadingBackCoroutine;
 
     private void Awake()
     {
@@ -37,6 +37,7 @@ public class UiCreditsMainMenu : MonoBehaviour
     private void OnDestroy()
     {
         _backBtn.onClick.RemoveAllListeners();
+        StopAllCoroutines();
     }
 
     private IEnumerator FadingForCredits()
@@ -99,20 +100,20 @@ public class UiCreditsMainMenu : MonoBehaviour
 
     public void BackClicked()
     {
-        if (_fadingBackCorroutine != null)
-            StopCoroutine(_fadingBackCorroutine);
+        if (_fadingBackCoroutine != null)
+            StopCoroutine(_fadingBackCoroutine);
 
-        _fadingBackCorroutine = FadingForMainMenu();
-        StartCoroutine(_fadingBackCorroutine);
+        _fadingBackCoroutine = FadingForMainMenu();
+        StartCoroutine(_fadingBackCoroutine);
     }
 
     public void OnCreditsClicked_CreditsAppear()
     {
-        if (_fadingCorroutine != null)
-            StopCoroutine(_fadingCorroutine);
+        if (_fadingCoroutine != null)
+            StopCoroutine(_fadingCoroutine);
 
-        _fadingCorroutine = FadingForCredits();
-        StartCoroutine(_fadingCorroutine);
+        _fadingCoroutine = FadingForCredits();
+        StartCoroutine(_fadingCoroutine);
     }
 
 }

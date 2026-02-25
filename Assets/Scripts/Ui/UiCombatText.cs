@@ -27,7 +27,7 @@ public class UiCombatText : MonoBehaviour
 
         CombatAction.OnPlayerUsedSpell += OnPlayerUsedSpell_ChangeText;
 
-        CombatAction.OnPlayerHealedWithDarkShield += OnPlayerHealedWithDarkShield_ChangeText;
+        CombatAction.OnPlayerHealedWithAbsorb += OnPlayerHealedWithAbsorb_ChangeText;
 
         EnemyTurnManager.OnEnemyTurnStart += OnEnemyTurnStart_ChangeText;
 
@@ -36,6 +36,8 @@ public class UiCombatText : MonoBehaviour
         UiCombatButtons.OnNotHavingSpells += OnNotHavingSpells_ChangeText;
 
         Character.OnInfected += OnInfected_ChangeText;
+
+        CombatAction.OnFailedToCast += OnFailedToCast_ChangeText;
     }
 
     private void OnDisable()
@@ -60,7 +62,7 @@ public class UiCombatText : MonoBehaviour
 
         CombatAction.OnPlayerUsedSpell -= OnPlayerUsedSpell_ChangeText;
 
-        CombatAction.OnPlayerHealedWithDarkShield -= OnPlayerHealedWithDarkShield_ChangeText;
+        CombatAction.OnPlayerHealedWithAbsorb -= OnPlayerHealedWithAbsorb_ChangeText;
 
         EnemyTurnManager.OnEnemyTurnStart -= OnEnemyTurnStart_ChangeText;
 
@@ -69,6 +71,8 @@ public class UiCombatText : MonoBehaviour
         UiCombatButtons.OnNotHavingSpells -= OnNotHavingSpells_ChangeText;
 
         Character.OnInfected -= OnInfected_ChangeText;
+
+        CombatAction.OnFailedToCast -= OnFailedToCast_ChangeText;
     }
 
     public void OnBattleStart_ChangeText()
@@ -151,21 +155,21 @@ public class UiCombatText : MonoBehaviour
                 _text.text = player.data.name + " attacked with a Fireball.";
                 break;
 
-            case CombatAction.Spells.IceWall:
-                _text.text = player.data.name + " uses an Ice Wall to protect itself.";
+            case CombatAction.Spells.MagicShield:
+                _text.text = player.data.name + " uses a Magic Shield to protect itself.";
                 break;
 
-            case CombatAction.Spells.DarkShield:
-                _text.text = player.data.name + " uses a Dark Shield to absorb damage.";
+            case CombatAction.Spells.Absorb:
+                _text.text = player.data.name + " prepares itself to absorb damage.";
                 break;
 
-            case CombatAction.Spells.HealingRoot:
-                _text.text = player.data.name + " heals with roots founded on the ground.";
+            case CombatAction.Spells.Heal:
+                _text.text = player.data.name + " heals its life.";
                 break;
         }
     }
 
-    public void OnPlayerHealedWithDarkShield_ChangeText(Character player)
+    public void OnPlayerHealedWithAbsorb_ChangeText(Character player)
     {
         _text.text = player.data.name + " absorbed the damage and healed.";
     }
@@ -178,5 +182,10 @@ public class UiCombatText : MonoBehaviour
     public void OnInfected_ChangeText(Character player)
     {
         _text.text = player.name + " is damaged by infection.";
+    }
+
+    public void OnFailedToCast_ChangeText(Character player)
+    {
+        _text.text = player.name + " failed casting the spell";
     }
 }

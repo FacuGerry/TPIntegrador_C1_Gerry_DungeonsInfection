@@ -5,7 +5,7 @@ public class UnlockingSpellsSO : ScriptableObject
 {
     [Header("Spells Unlocking")]
     public bool hasFireball;
-    public bool hasIceWall;
-    public bool hasDarkShield;
-    public bool hasHealingRoot;
+    public bool hasMagicShield;
+    public bool hasAbsorb;
+    public bool hasHeal;
 }

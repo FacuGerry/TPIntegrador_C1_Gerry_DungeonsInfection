@@ -14,7 +14,7 @@ public class CombatEndChangeScene : MonoBehaviour
         CombatManager.OnPlayerLose += OnPlayerLose_StartCoroutine;
         CombatManager.OnPlayerEscaped += OnPlayerEscaped_StartCoroutine;
 
-        CheckAllWinsAndRestart.OnWinGame += OnWinGame_StopCorroutines;
+        CheckAllWinsAndRestart.OnWinGame += OnWinGame_StopCoroutines;
     }
 
     private void OnDisable()
@@ -23,7 +23,7 @@ public class CombatEndChangeScene : MonoBehaviour
         CombatManager.OnPlayerLose -= OnPlayerLose_StartCoroutine;
         CombatManager.OnPlayerEscaped -= OnPlayerEscaped_StartCoroutine;
 
-        CheckAllWinsAndRestart.OnWinGame -= OnWinGame_StopCorroutines;
+        CheckAllWinsAndRestart.OnWinGame -= OnWinGame_StopCoroutines;
     }
 
     private void OnDestroy()
@@ -73,7 +73,7 @@ public class CombatEndChangeScene : MonoBehaviour
         StartCoroutine(_waitingCoroutine);
     }
 
-    public void OnWinGame_StopCorroutines()
+    public void OnWinGame_StopCoroutines()
     {
         if (_waitingCoroutine != null)
             StopCoroutine(_waitingCoroutine);

@@ -602,7 +602,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 88ead55815a6a6b468dfe9a2e90ab622, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _finalBossBattle: {fileID: 11400000, guid: 39960353d0a9e634484287a1f4505449, type: 2}
   _canvasWin: {fileID: 1185536639}
   _canvasLose: {fileID: 400464546}
   _btnWin: {fileID: 1245378516}
@@ -637,7 +636,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _sceneToLoad: .
-  _spellsData: {fileID: 0}
+  _sceneWin: Win&Lose
+  _players:
+  - {fileID: 11400000, guid: 2da278d600cc873459523b783980e1e4, type: 2}
+  - {fileID: 11400000, guid: d551ff6a524fad4429f1033e719a9633, type: 2}
+  _spellsData: {fileID: 11400000, guid: 27595a118aee6724088cc0efe8fc8180, type: 2}
+  _levelsData: {fileID: 11400000, guid: f86882f5f6dd74140acf4b7bc76b7d31, type: 2}
   _battles:
   - {fileID: 11400000, guid: 39960353d0a9e634484287a1f4505449, type: 2}
   - {fileID: 11400000, guid: 6b8e9979061ccc949b0e5fe2a3cea020, type: 2}

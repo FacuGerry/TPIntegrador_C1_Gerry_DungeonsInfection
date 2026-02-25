@@ -10,7 +10,7 @@ public class EnemyTurnManager : MonoBehaviour
     public static event Action<CharacterDataSO, Character, string> OnShowEnemyAttacked;
     public static event Action OnEnemyAttackEnd;
     public static event Action OnEnemyKilledPlayer;
-    public static event Action<Character> OnPlayerUsedDarkShield;
+    public static event Action<Character> OnPlayerUsedAbsorb;
 
     public static event Action<Character, Character> OnAnimateEnemyAttack;
 
@@ -48,7 +48,7 @@ public class EnemyTurnManager : MonoBehaviour
         {
             // heal
             _action = "healed";
-            enemy.life += ((_battleDefinition.battleLevel / 10) + 1) * _infectedAttacks.heal;
+            enemy.life += _battleDefinition.battleLevel * _infectedAttacks.heal;
             if (enemy.life > enemy.data.life)
                 enemy.life = enemy.data.life;
         }
@@ -56,19 +56,19 @@ public class EnemyTurnManager : MonoBehaviour
         {
             // scratch
             _action = "scratched";
-            _attack *= (_battleDefinition.battleLevel / 10) + 1;
+            _attack *= _battleDefinition.battleLevel + 1;
         }
         else if (rand >= 0.45f && rand < 0.65f)
         {
             // bite
             _action = "bit";
-            _attack = ((_battleDefinition.battleLevel / 10) + 1) * _infectedAttacks.bite;
+            _attack = _battleDefinition.battleLevel * _infectedAttacks.bite;
         }
         else if (rand >= 0.65f)
         {
             // infect
             _action = "infected";
-            _attack = ((_battleDefinition.battleLevel / 10) + 1) * _infectedAttacks.infect;
+            _attack = _battleDefinition.battleLevel * _infectedAttacks.infect;
             _playerAttacked.isInfected = true;
         }
 
@@ -76,11 +76,11 @@ public class EnemyTurnManager : MonoBehaviour
         {
             int finalDmg = (_attack - _playerAttacked.defense);
 
-            if (_playerAttacked.isDarkShieldOn)
-                finalDmg -= _playerAttacked.data.darkShield;
+            if (_playerAttacked.isAbsorbOn)
+                finalDmg -= _playerAttacked.data.absorb;
 
-            if (_playerAttacked.isIceWallOn)
-                finalDmg -= _playerAttacked.data.iceWall;
+            if (_playerAttacked.isMagicShieldOn)
+                finalDmg -= _playerAttacked.data.magicShield;
 
             if (finalDmg <= 0)
             {
@@ -98,9 +98,9 @@ public class EnemyTurnManager : MonoBehaviour
 
             _attack = enemy.data.attack;
             OnEnemyAttack?.Invoke(_playerAttacked);
-            if (_playerAttacked.isDarkShieldOn)
+            if (_playerAttacked.isAbsorbOn)
             {
-                OnPlayerUsedDarkShield?.Invoke(_playerAttacked);
+                OnPlayerUsedAbsorb?.Invoke(_playerAttacked);
             }
 
             OnShowEnemyAttacked?.Invoke(enemy.data, _playerAttacked, _action);
@@ -122,35 +122,37 @@ public class EnemyTurnManager : MonoBehaviour
 
     private IEnumerator VirusAttack(Character enemy)
     {
+        float rand = UnityEngine.Random.value + 1;
 
+        float finalDmg = (_attack - _playerAttacked.defense) * rand * _battleDefinition.battleLevel;
 
-        int finalDmg = (_attack - _playerAttacked.defense);
+        if (_playerAttacked.isAbsorbOn)
+            finalDmg -= _playerAttacked.data.absorb;
 
-        if (_playerAttacked.isDarkShieldOn)
-            finalDmg -= _playerAttacked.data.darkShield;
+        if (_playerAttacked.isMagicShieldOn)
+            finalDmg -= _playerAttacked.data.magicShield;
 
-        if (_playerAttacked.isIceWallOn)
-            finalDmg -= _playerAttacked.data.iceWall;
-
-        if (finalDmg <= 0)
+        if (finalDmg < 0)
         {
             _attack = 0;
             _action = "failed to attack";
         }
         else
-            _attack = finalDmg;
+        {
+            _attack = (int)finalDmg;
+            _action = "attacked";
+        }
 
         _playerAttacked.life -= _attack;
 
         if (_playerAttacked.life <= 0)
             _playerAttacked.life = 0;
 
-
         _attack = enemy.data.attack;
         OnEnemyAttack?.Invoke(_playerAttacked);
-        if (_playerAttacked.isDarkShieldOn)
+        if (_playerAttacked.isAbsorbOn)
         {
-            OnPlayerUsedDarkShield?.Invoke(_playerAttacked);
+            OnPlayerUsedAbsorb?.Invoke(_playerAttacked);
         }
 
         OnShowEnemyAttacked?.Invoke(enemy.data, _playerAttacked, _action);
@@ -203,7 +205,7 @@ public class EnemyTurnManager : MonoBehaviour
                 StartCoroutine(_courroutineInfectedAttack);
                 break;
             case "Virus":
-                    if (_courroutineVirusAttack != null)
+                if (_courroutineVirusAttack != null)
                     StopCoroutine(_courroutineVirusAttack);
 
                 _courroutineVirusAttack = VirusAttack(enemy);

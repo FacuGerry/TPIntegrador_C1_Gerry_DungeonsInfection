@@ -2,11 +2,16 @@ using UnityEngine;
 
 public class MusicController : MonoBehaviour
 {
-    [SerializeField] private AudioSource _music;
     [SerializeField] private AudioClip _musicClip;
+    private AudioSource _source;
+
+    private void Awake()
+    {
+        _source = GetComponent<AudioSource>();
+    }
 
     private void Start()
     {
-        _music.PlayOneShot(_musicClip);
+        _source.PlayOneShot(_musicClip);
     }
 }

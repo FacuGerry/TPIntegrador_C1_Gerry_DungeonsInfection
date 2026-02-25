@@ -13,14 +13,24 @@ MonoBehaviour:
   m_Name: Thane
   m_EditorClassIdentifier: 
   characterName: Thane
-  life: 12
+  baseLife: 9
+  life: 9
+  baseAttack: 2
   attack: 2
   spriteRenderer: {fileID: 4563017240499988079, guid: c9e3a129d78856841a55e654c27fad06, type: 3}
   animator: {fileID: 7119002091330096071, guid: c9e3a129d78856841a55e654c27fad06, type: 3}
   isPlayer: 1
-  fireball: 4
-  iceWall: 4
-  darkShield: 3
-  healingRoot: 5
-  defense: 2
+  baseFireball: 3
+  fireball: 3
+  baseMagicShield: 1
+  magicShield: 1
+  baseAbsorb: 1
+  absorb: 1
+  baseHeal: 1
+  heal: 1
+  defense: 1
   valueToEscape: 0.65
+  valueToAddWhenLevelUp: 1
+  valueToAddWhenLevelUpDefense: 1
+  chanceToCastSpell: 0.5
+  lifeToQuitOnInfected: 1

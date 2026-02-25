@@ -32,6 +32,8 @@ public class EnemyLifeBar : MonoBehaviour
         if (enemy == _enemy)
         {
             float life = (float)enemy.life / (float)enemy.maxLife;
+            if (life < 0f)
+                life = 0f;
             _lifeBar.transform.localScale = new Vector3(life * _initalSize, _lifeBar.transform.localScale.y, _lifeBar.transform.localScale.z);
         }
     }

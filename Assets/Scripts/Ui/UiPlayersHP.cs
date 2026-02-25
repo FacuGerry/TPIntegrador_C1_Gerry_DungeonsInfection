@@ -9,12 +9,14 @@ public class UiPlayersHP : MonoBehaviour
     private void OnEnable()
     {
         Character.OnDataSet += UpdateLife;
+        Character.OnInfected += UpdateLife;
         EnemyTurnManager.OnEnemyAttack += UpdateLife;
     }
 
     private void OnDisable()
     {
         Character.OnDataSet -= UpdateLife;
+        Character.OnInfected -= UpdateLife;
         EnemyTurnManager.OnEnemyAttack -= UpdateLife;
     }
 

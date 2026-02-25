@@ -7,7 +7,32 @@ public class SpellsUnlocking : MonoBehaviour
 
     [SerializeField] private UnlockingSpellsSO _dataSpells;
     [SerializeField] private CombatAction.Spells _spells;
-    
+
+    private void Start()
+    {
+        switch (_spells)
+        {
+            case CombatAction.Spells.Fireball:
+                if (_dataSpells.hasFireball)
+                    gameObject.SetActive(false);
+                break;
+
+            case CombatAction.Spells.MagicShield:
+                if (_dataSpells.hasMagicShield)
+                    gameObject.SetActive(false);
+                break;
+
+            case CombatAction.Spells.Absorb:
+                if (_dataSpells.hasAbsorb)
+                    gameObject.SetActive(false);
+                break;
+
+            case CombatAction.Spells.Heal:
+               if (_dataSpells.hasHeal)
+                    gameObject.SetActive(false);
+                break;
+        }
+    }
 
     private void OnTriggerEnter2D(Collider2D collider)
     {
@@ -17,16 +42,16 @@ public class SpellsUnlocking : MonoBehaviour
                 _dataSpells.hasFireball = true;
                 break;
 
-            case CombatAction.Spells.IceWall:
-                _dataSpells.hasIceWall = true;
+            case CombatAction.Spells.MagicShield:
+                _dataSpells.hasMagicShield = true;
                 break;
 
-            case CombatAction.Spells.DarkShield:
-                _dataSpells.hasDarkShield = true;
+            case CombatAction.Spells.Absorb:
+                _dataSpells.hasAbsorb = true;
                 break;
 
-            case CombatAction.Spells.HealingRoot:
-                _dataSpells.hasHealingRoot = true;
+            case CombatAction.Spells.Heal:
+                _dataSpells.hasHeal = true;
                 break;
         }
 

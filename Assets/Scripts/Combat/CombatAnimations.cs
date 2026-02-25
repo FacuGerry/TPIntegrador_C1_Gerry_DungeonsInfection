@@ -3,8 +3,8 @@ using UnityEngine;
 
 public class CombatAnimations : MonoBehaviour
 {
-    private IEnumerator _corroutinePlayerAttack;
-    private IEnumerator _corroutineEnemyAttack;
+    private IEnumerator _coroutinePlayerAttack;
+    private IEnumerator _coroutineEnemyAttack;
 
     private void OnEnable()
     {
@@ -69,19 +69,19 @@ public class CombatAnimations : MonoBehaviour
 
     public void OnPlayerAttackorSpell_Animate(Character player, Character enemy)
     {
-        if (_corroutinePlayerAttack != null)
-            StopCoroutine(_corroutinePlayerAttack);
+        if (_coroutinePlayerAttack != null)
+            StopCoroutine(_coroutinePlayerAttack);
 
-        _corroutinePlayerAttack = PlayerAttacking(player, enemy);
-        StartCoroutine(_corroutinePlayerAttack);
+        _coroutinePlayerAttack = PlayerAttacking(player, enemy);
+        StartCoroutine(_coroutinePlayerAttack);
     }
 
     public void OnEnemyAttack_Animate(Character enemy, Character player)
     {
-        if (_corroutineEnemyAttack != null)
-            StopCoroutine(_corroutineEnemyAttack);
+        if (_coroutineEnemyAttack != null)
+            StopCoroutine(_coroutineEnemyAttack);
 
-        _corroutineEnemyAttack = EnemyAttacking(enemy, player);
-        StartCoroutine(_corroutineEnemyAttack);
+        _coroutineEnemyAttack = EnemyAttacking(enemy, player);
+        StartCoroutine(_coroutineEnemyAttack);
     }
 }

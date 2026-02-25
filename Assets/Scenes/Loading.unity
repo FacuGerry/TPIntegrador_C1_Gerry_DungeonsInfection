@@ -371,22 +371,23 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _sfx: {fileID: 60199190}
   _ui: {fileID: 144185406}
-  _bookColected: {fileID: 0}
-  _playerStepsSound: {fileID: 0}
-  _playerAttackSound: {fileID: 0}
-  _playerHurtSound: {fileID: 0}
-  _playerDefendSound: {fileID: 0}
-  _playerDeathSound: {fileID: 0}
-  _fireballSound: {fileID: 0}
-  _iceWallSound: {fileID: 0}
-  _DarkShieldSound: {fileID: 0}
-  _HealingRootSound: {fileID: 0}
-  _infectedAttackSound: {fileID: 0}
-  _infectedHurtSound: {fileID: 0}
-  _infectedDeadSound: {fileID: 0}
-  _virusAttackSound: {fileID: 0}
-  _virusHurtSound: {fileID: 0}
-  _virusDeadSound: {fileID: 0}
+  _bookColected: {fileID: 8300000, guid: d654174ef194bd7479bf4b8d8f753318, type: 3}
+  _playerStepsSound: {fileID: 8300000, guid: 2352822feb4caa14ebdbc0c713289f8d, type: 3}
+  _playerEntersStairs: {fileID: 8300000, guid: 8ff2a2d7e79f81c40ac447512f879374, type: 3}
+  _playerAttackSound: {fileID: 8300000, guid: 88b1cbe3caa3fee4b8b103b5edd7aba9, type: 3}
+  _playerHurtSound: {fileID: 8300000, guid: 5c7b6d4002009e842bd2621585546d19, type: 3}
+  _playerDefendSound: {fileID: 8300000, guid: b7b5a6156961bac44a67504d42ce6fcf, type: 3}
+  _playerDeathSound: {fileID: 8300000, guid: acbcb75601b0082458fda8807f67c813, type: 3}
+  _fireballSound: {fileID: 8300000, guid: a652877b012108e41871f867ada9f176, type: 3}
+  _magicShieldSound: {fileID: 8300000, guid: 1d74880bed4586644a16a79a2d9dc8af, type: 3}
+  _absorbSound: {fileID: 8300000, guid: 7a9de5c4d998126449cf964a6b27a8b0, type: 3}
+  _healSound: {fileID: 8300000, guid: cfce0cea076109f478783201b2a9f57f, type: 3}
+  _noSpellsToUse: {fileID: 8300000, guid: 1ed8fb76fc64e4e46847348138782234, type: 3}
+  _infectedAttackSound: {fileID: 8300000, guid: 56703418e3aed4c47a5f6622816b8e41, type: 3}
+  _infectedHurtSound: {fileID: 8300000, guid: 7c47b20bb9874304a809dc5580d403ba, type: 3}
+  _infectedDeadSound: {fileID: 8300000, guid: 566d2ea6240b489479a6e9fd608c2621, type: 3}
+  _virusAttackSound: {fileID: 8300000, guid: fd25a15f9797641458336cccfb445343, type: 3}
+  _virusHurtSound: {fileID: 8300000, guid: 2b21ef916f6943c439b71a7c74568878, type: 3}
   _btnHover: {fileID: 8300000, guid: cb231dc76449c8e46989b1203a51c32d, type: 3}
   _btnClick: {fileID: 8300000, guid: f44b7388dcf5dd14a981e85a3aa5a9f6, type: 3}
 --- !u!4 &136214555
@@ -712,7 +713,7 @@ MonoBehaviour:
   _sceneToLoadAfterLoading: MainMenu
   sceneToLoadForCombats: Combat
   _playerPosition: {fileID: 11400000, guid: 488f4e99c86e8aa49821088839115fdc, type: 2}
-  _playerInitialPosition: {x: 0, y: 0, z: 0}
+  _playerInitialPosition: {x: 0, y: -2.5, z: 0}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0

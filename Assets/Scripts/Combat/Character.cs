@@ -2,20 +2,11 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Character : MonoBehaviour
+public partial class Character : MonoBehaviour
 {
     public static event Action<Character, List<Character>> OnEnemyTurn;
     public static event Action<Character> OnDataSet;
     public static event Action<Character> OnInfected;
-
-    public enum CharacterStates
-    {
-        None = -1,
-        Idle,
-        Attack,
-        Hurt,
-        Dead
-    }
 
     public CharacterDataSO data;
     private SpriteRenderer _spriteRenderer;
@@ -25,8 +16,8 @@ public class Character : MonoBehaviour
 
     public int life;
     [NonSerialized] public int maxLife;
-    [NonSerialized] public bool isIceWallOn = false;
-    [NonSerialized] public bool isDarkShieldOn = false;
+    [NonSerialized] public bool isMagicShieldOn = false;
+    [NonSerialized] public bool isAbsorbOn = false;
     [NonSerialized] public int defense = 0;
     [NonSerialized] public bool isInfected = false;
 
@@ -47,6 +38,8 @@ public class Character : MonoBehaviour
 
         CombatManager.OnRoundEnd += OnRoundEnd_Infect;
 
+        CombatManager.OnSettingLifeToLevel += SetLifeToLevel;
+
         LevelsSystem.OnLevelUp += OnLevelUp_AddStats;
     }
 
@@ -55,6 +48,8 @@ public class Character : MonoBehaviour
         CombatManager.OnRoundEnd -= OnRoundEnd_ResetDefense;
 
         CombatManager.OnRoundEnd -= OnRoundEnd_Infect;
+
+        CombatManager.OnSettingLifeToLevel -= SetLifeToLevel;
 
         LevelsSystem.OnLevelUp -= OnLevelUp_AddStats;
     }
@@ -88,33 +83,44 @@ public class Character : MonoBehaviour
     public void OnRoundEnd_ResetDefense()
     {
         defense = 0;
-        isIceWallOn = false;
-        isDarkShieldOn = false;
+        isMagicShieldOn = false;
+        isAbsorbOn = false;
     }
 
     public void OnRoundEnd_Infect()
     {
-        if (data.isPlayer && isInfected)
+        if (!data.isPlayer && isInfected)
         {
-            life -= maxLife / 10;
+            life -= data.lifeToQuitOnInfected;
             OnInfected?.Invoke(this);
         }
     }
 
-    public void OnLevelUp_AddStats(int level)
+    public void SetLifeToLevel(Character enemy, BattleDefinitionSO battle)
+    {
+        if (!enemy.data.isPlayer)
+        {
+            enemy.life *= (battle.battleLevel / 10) + 1;
+        }
+    }
+
+    public void OnLevelUp_AddStats(int level, int levelBefore)
     {
         if (!data.isPlayer)
             return;
 
-        data.attack += data.valueToAddWhenLevelUp;
-        data.life += data.valueToAddWhenLevelUp;
+        for (int i = levelBefore; i < level; i++)
+        {
+            data.attack += data.valueToAddWhenLevelUp;
+            data.life += data.valueToAddWhenLevelUp;
 
-        data.defense += data.valueToAddWhenLevelUpDefense;
+            data.defense += data.valueToAddWhenLevelUpDefense;
 
-        data.fireball += data.valueToAddWhenLevelUp;
+            data.fireball += data.valueToAddWhenLevelUp;
 
-        data.iceWall += data.valueToAddWhenLevelUpDefense;
-        data.darkShield += data.valueToAddWhenLevelUpDefense;
-        data.healingRoot += data.valueToAddWhenLevelUpDefense;
+            data.magicShield += data.valueToAddWhenLevelUpDefense;
+            data.absorb += data.valueToAddWhenLevelUpDefense;
+            data.heal += data.valueToAddWhenLevelUpDefense;
+        }
     }
 }

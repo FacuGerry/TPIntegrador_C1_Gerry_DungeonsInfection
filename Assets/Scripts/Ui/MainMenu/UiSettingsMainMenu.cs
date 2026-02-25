@@ -10,8 +10,8 @@ public class UiSettingsMainMenu : MonoBehaviour
 
     private CanvasGroup _canvasSettings;
 
-    private IEnumerator _fadingCorroutine;
-    private IEnumerator _fadingBackCorroutine;
+    private IEnumerator _fadingCoroutine;
+    private IEnumerator _fadingBackCoroutine;
 
     private void Awake()
     {
@@ -39,6 +39,7 @@ public class UiSettingsMainMenu : MonoBehaviour
     private void OnDestroy()
     {
         _backBtn.onClick.RemoveAllListeners();
+        StopAllCoroutines();
     }
 
     private IEnumerator FadingForSettings()
@@ -102,19 +103,19 @@ public class UiSettingsMainMenu : MonoBehaviour
 
     public void BackClicked()
     {
-        if (_fadingBackCorroutine != null)
-            StopCoroutine(_fadingBackCorroutine);
+        if (_fadingBackCoroutine != null)
+            StopCoroutine(_fadingBackCoroutine);
 
-        _fadingBackCorroutine = FadingForMainMenu();
-        StartCoroutine(_fadingBackCorroutine);
+        _fadingBackCoroutine = FadingForMainMenu();
+        StartCoroutine(_fadingBackCoroutine);
     }
 
     public void OnSettingsClicked_SettingsAppear()
     {
-        if (_fadingCorroutine != null)
-            StopCoroutine(_fadingCorroutine);
+        if (_fadingCoroutine != null)
+            StopCoroutine(_fadingCoroutine);
 
-        _fadingCorroutine = FadingForSettings();
-        StartCoroutine(_fadingCorroutine);
+        _fadingCoroutine = FadingForSettings();
+        StartCoroutine(_fadingCoroutine);
     }
 }

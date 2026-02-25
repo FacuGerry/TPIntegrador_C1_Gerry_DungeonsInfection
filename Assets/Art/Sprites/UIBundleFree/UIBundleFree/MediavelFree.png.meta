@@ -700,7 +700,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: MediavelFree_15
+      name: ASwordPointer
       rect:
         serializedVersion: 2
         x: 241
@@ -1414,7 +1414,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: MediavelFree_49
+      name: BorderMiniMap
       rect:
         serializedVersion: 2
         x: 83
@@ -2139,6 +2139,8 @@ TextureImporter:
     secondaryTextures: []
     nameFileIdTable:
       ABar: -6108517423855348156
+      ASwordPointer: -2120038064194368868
+      BorderMiniMap: 8394316942430120608
       MediavelFree_0: 3701250841275472991
       MediavelFree_1: -7742548084486331276
       MediavelFree_10: 4666030741728416337
@@ -2146,7 +2148,6 @@ TextureImporter:
       MediavelFree_12: 4013859284292910320
       MediavelFree_13: -3579115525997062753
       MediavelFree_14: -4363524430983978037
-      MediavelFree_15: -2120038064194368868
       MediavelFree_16: -3663541240222051465
       MediavelFree_17: 6729825944255837489
       MediavelFree_18: 4892632931224591033
@@ -2183,7 +2184,6 @@ TextureImporter:
       MediavelFree_46: 2599224241092224535
       MediavelFree_47: 5328746897818270469
       MediavelFree_48: -4321919444467585127
-      MediavelFree_49: 8394316942430120608
       MediavelFree_5: 3045313126262525317
       MediavelFree_50: 3746738740697558014
       MediavelFree_51: -9129877692790004119

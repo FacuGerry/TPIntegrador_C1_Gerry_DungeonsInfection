@@ -13,14 +13,24 @@ MonoBehaviour:
   m_Name: Royd
   m_EditorClassIdentifier: 
   characterName: Royd
-  life: 15
+  baseLife: 10
+  life: 10
+  baseAttack: 2
   attack: 2
   spriteRenderer: {fileID: 4563017240499988079, guid: a88eb7981462140458582db6b5f68395, type: 3}
   animator: {fileID: 7119002091330096071, guid: a88eb7981462140458582db6b5f68395, type: 3}
   isPlayer: 1
-  fireball: 4
-  iceWall: 4
-  darkShield: 3
-  healingRoot: 5
+  baseFireball: 2
+  fireball: 2
+  baseMagicShield: 2
+  magicShield: 2
+  baseAbsorb: 2
+  absorb: 2
+  baseHeal: 2
+  heal: 2
   defense: 1
   valueToEscape: 0.65
+  valueToAddWhenLevelUp: 1
+  valueToAddWhenLevelUpDefense: 1
+  chanceToCastSpell: 0.5
+  lifeToQuitOnInfected: 1

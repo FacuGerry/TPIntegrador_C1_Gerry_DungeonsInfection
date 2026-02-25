@@ -7,12 +7,24 @@ using UnityEngine.SceneManagement;
 public class CheckAllWinsAndRestart : MonoBehaviour
 {
     public static event Action OnWinGame;
+    public static event Action OnLoseGame;
 
     [SerializeField] private string _sceneToLoad;
+    [SerializeField] private string _sceneWin;
+    [SerializeField] private List<CharacterDataSO> _players = new List<CharacterDataSO>();
     [SerializeField] private UnlockingSpellsSO _spellsData;
+    [SerializeField] private LevelsSO _levelsData;
     [SerializeField] private List<BattleDefinitionSO> _battles = new List<BattleDefinitionSO>();
 
-    private IEnumerator _corroutineWaitWinScreen;
+    private IEnumerator _coroutineWaitWinScreen;
+
+    private void Start()
+    {
+        if (SceneManager.GetActiveScene() == SceneManager.GetSceneByName(_sceneWin))
+        {
+            OnPlayerWin_CheckWinGame();
+        }
+    }
 
     private void OnEnable()
     {
@@ -51,12 +63,14 @@ public class CheckAllWinsAndRestart : MonoBehaviour
         if (winBattles == _battles.Count)
         {
             OnWinGame?.Invoke();
-            if (_corroutineWaitWinScreen != null)
-                StopCoroutine(_corroutineWaitWinScreen);
+            if (_coroutineWaitWinScreen != null)
+                StopCoroutine(_coroutineWaitWinScreen);
 
-            _corroutineWaitWinScreen = WaitAndLoadWinScreen();
-            StartCoroutine(_corroutineWaitWinScreen);
+            _coroutineWaitWinScreen = WaitAndLoadWinScreen();
+            StartCoroutine(_coroutineWaitWinScreen);
         }
+        else
+            OnLoseGame?.Invoke();
     }
 
     public void OnMainMenuSelected_RestartGame()
@@ -66,9 +80,23 @@ public class CheckAllWinsAndRestart : MonoBehaviour
             battle.isWon = false;
         }
 
+        foreach (CharacterDataSO player in _players)
+        {
+            player.life = player.baseLife;
+            player.attack = player.baseAttack;
+            player.fireball = player.baseFireball;
+            player.magicShield = player.baseMagicShield;
+            player.absorb = player.baseAbsorb;
+            player.heal = player.baseHeal;
+        }
+
         _spellsData.hasFireball = false;
-        _spellsData.hasIceWall = false;
-        _spellsData.hasDarkShield = false;
-        _spellsData.hasHealingRoot = false;
+        _spellsData.hasMagicShield = false;
+        _spellsData.hasAbsorb = false;
+        _spellsData.hasHeal = false;
+
+        _levelsData.levelBeforeBattle = 1;
+        _levelsData.level = 1;
+        _levelsData.experience = 0;
     }
 }

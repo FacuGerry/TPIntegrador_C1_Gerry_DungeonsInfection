@@ -7,7 +7,6 @@ public class UiWinAndLoseScreen : MonoBehaviour
 {
     public static event Action OnMainMenuSelected;
 
-    [SerializeField] private BattleDefinitionSO _finalBossBattle;
     [SerializeField] private CanvasGroup _canvasWin;
     [SerializeField] private CanvasGroup _canvasLose;
     [SerializeField] private Button _btnWin;
@@ -20,19 +19,36 @@ public class UiWinAndLoseScreen : MonoBehaviour
         CanvasWinAppear(false);
         CanvasLoseAppear(false);
 
-        if (_finalBossBattle.isWon)
-            CanvasWinAppear(true);
-        else
-            CanvasLoseAppear(true);
-
         _btnWin.onClick.AddListener(GoToMainMenu);
         _btnLose.onClick.AddListener(GoToOverworld);
+    }
+
+    private void OnEnable()
+    {
+        CheckAllWinsAndRestart.OnWinGame += OnWin_ShowWinText;
+        CheckAllWinsAndRestart.OnLoseGame += OnLose_ShowWinText;
+    }
+
+    private void OnDisable()
+    {
+        CheckAllWinsAndRestart.OnWinGame -= OnWin_ShowWinText;
+        CheckAllWinsAndRestart.OnLoseGame -= OnLose_ShowWinText;
     }
 
     private void OnDestroy()
     {
         _btnWin.onClick.RemoveAllListeners();
         _btnLose.onClick.RemoveAllListeners();
+    }
+
+    public void OnWin_ShowWinText()
+    {
+        CanvasWinAppear(true);
+    }
+
+    public void OnLose_ShowWinText()
+    {
+        CanvasLoseAppear(true);
     }
 
     public void CanvasWinAppear(bool isOn)

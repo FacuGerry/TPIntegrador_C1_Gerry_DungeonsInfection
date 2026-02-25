@@ -20,11 +20,12 @@ public class PauseGame : MonoBehaviour
 
     private bool _canBePaused;
 
-    private IEnumerator _corroutineFading;
+    private IEnumerator _coroutineFading;
 
     private void Start()
     {
         _isPaused = false;
+        _canBePaused = true;
         CanvasAppear(_isPaused);
 
         _btnBack.onClick.AddListener(OnBackClicked);
@@ -33,6 +34,8 @@ public class PauseGame : MonoBehaviour
     private void OnEnable()
     {
         UiTextOverworld.OnPauseForUnlocking += OnPauseForUnlocking_DisablePause;
+
+        UiPauseMainMenuButton.OnMainMenuClicked += OnMainMenuClicked_DisablePause;
     }
 
     private void Update()
@@ -44,21 +47,21 @@ public class PauseGame : MonoBehaviour
                 case true:
                     _isPaused = false;
 
-                    if (_corroutineFading != null)
-                        StopCoroutine(_corroutineFading);
+                    if (_coroutineFading != null)
+                        StopCoroutine(_coroutineFading);
 
-                    _corroutineFading = FadingForPause(false);
-                    StartCoroutine(_corroutineFading);
+                    _coroutineFading = FadingForPause(false);
+                    StartCoroutine(_coroutineFading);
                     break;
 
                 case false:
                     _isPaused = true;
 
-                    if (_corroutineFading != null)
-                        StopCoroutine(_corroutineFading);
+                    if (_coroutineFading != null)
+                        StopCoroutine(_coroutineFading);
 
-                    _corroutineFading = FadingForPause(true);
-                    StartCoroutine(_corroutineFading);
+                    _coroutineFading = FadingForPause(true);
+                    StartCoroutine(_coroutineFading);
                     break;
             }
         }
@@ -67,6 +70,8 @@ public class PauseGame : MonoBehaviour
     private void OnDisable()
     {
         UiTextOverworld.OnPauseForUnlocking -= OnPauseForUnlocking_DisablePause;
+
+        UiPauseMainMenuButton.OnMainMenuClicked -= OnMainMenuClicked_DisablePause;
     }
 
     private void OnDestroy()
@@ -119,6 +124,11 @@ public class PauseGame : MonoBehaviour
         _canBePaused = !isPause;
     }
 
+    public void OnMainMenuClicked_DisablePause()
+    {
+        OnBackClicked();
+    }
+
     public void CanvasAppear(bool isOn)
     {
         _canvasPause.alpha = isOn ? 1f : 0f;
@@ -130,10 +140,10 @@ public class PauseGame : MonoBehaviour
     {
         _isPaused = false;
 
-        if (_corroutineFading != null)
-            StopCoroutine(_corroutineFading);
+        if (_coroutineFading != null)
+            StopCoroutine(_coroutineFading);
 
-        _corroutineFading = FadingForPause(false);
-        StartCoroutine(_corroutineFading);
+        _coroutineFading = FadingForPause(false);
+        StartCoroutine(_coroutineFading);
     }
 }

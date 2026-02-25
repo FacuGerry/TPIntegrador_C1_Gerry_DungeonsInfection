@@ -6,7 +6,11 @@ using UnityEngine;
 public partial class CombatManager : MonoBehaviour
 {
     public static event Action OnBattleStart;
+
+    public static event Action<Character, BattleDefinitionSO> OnSettingLifeToLevel;
+
     public static event Action OnWaitingForNewTurn;
+    public static event Action OnWaitingForWin;
 
     public static event Action OnPlayerTurn;
 
@@ -29,7 +33,7 @@ public partial class CombatManager : MonoBehaviour
 
     [Header("SpawnPoints")]
     [SerializeField] private Transform[] _spawnPointsPlayer = new Transform[2];
-    [SerializeField] private Transform[] _spawnPointsEnemies = new Transform[5];
+    [SerializeField] private List<Transform> _spawnPointsEnemies = new List<Transform>();
 
     private List<Character> _turnsList = new List<Character>();
     private List<Character> _playersList = new List<Character>();
@@ -80,9 +84,9 @@ public partial class CombatManager : MonoBehaviour
         UiCombatButtons.OnEscapeClicked += OnEscapeClicked_RollDice;
 
         UiCombatButtons.OnFireballClicked += OnFireballClicked_ChangeState;
-        UiCombatButtons.OnIceWallClicked += OnIceWallClicked_ChangeState;
-        UiCombatButtons.OnDarkShieldClicked += OnDarkShieldClicked_ChangeState;
-        UiCombatButtons.OnHealingRootClicked += OnHealingRootClicked_ChangeState;
+        UiCombatButtons.OnMagicShieldClicked += OnMagicShieldClicked_ChangeState;
+        UiCombatButtons.OnAbsorbClicked += OnAbsorbClicked_ChangeState;
+        UiCombatButtons.OnHealClicked += OnHealClicked_ChangeState;
 
         CombatAction.OnPlayerKillEnemy += OnPlayerKillEnemy_RemoveEnemy;
     }
@@ -99,9 +103,9 @@ public partial class CombatManager : MonoBehaviour
         UiCombatButtons.OnEscapeClicked -= OnEscapeClicked_RollDice;
 
         UiCombatButtons.OnFireballClicked -= OnFireballClicked_ChangeState;
-        UiCombatButtons.OnIceWallClicked -= OnIceWallClicked_ChangeState;
-        UiCombatButtons.OnDarkShieldClicked -= OnDarkShieldClicked_ChangeState;
-        UiCombatButtons.OnHealingRootClicked -= OnHealingRootClicked_ChangeState;
+        UiCombatButtons.OnMagicShieldClicked -= OnMagicShieldClicked_ChangeState;
+        UiCombatButtons.OnAbsorbClicked -= OnAbsorbClicked_ChangeState;
+        UiCombatButtons.OnHealClicked -= OnHealClicked_ChangeState;
 
         CombatAction.OnPlayerKillEnemy -= OnPlayerKillEnemy_RemoveEnemy;
     }
@@ -187,18 +191,18 @@ public partial class CombatManager : MonoBehaviour
                 _combatAction.UseFireball(_currentCharacter);
                 break;
 
-            case CombatStates.PlayerSelectIceWall:
-                _combatAction.UseIceWall(_currentCharacter);
+            case CombatStates.PlayerSelectMagicShield:
+                _combatAction.UseMagicShield(_currentCharacter);
                 WaitForSecondsAndChangeTurn(1f);
                 break;
 
-            case CombatStates.PlayerSelectDarkShield:
-                _combatAction.UseDarkShield(_currentCharacter);
+            case CombatStates.PlayerSelectAbsorb:
+                _combatAction.UseAbsorb(_currentCharacter);
                 WaitForSecondsAndChangeTurn(1f);
                 break;
 
-            case CombatStates.PlayerSelectHealingRoot:
-                _combatAction.UseHealingRoot(_currentCharacter);
+            case CombatStates.PlayerSelectHeal:
+                _combatAction.UseHeal(_currentCharacter);
                 WaitForSecondsAndChangeTurn(1f);
                 break;
 
@@ -246,8 +250,16 @@ public partial class CombatManager : MonoBehaviour
 
     public void SpawnEnemies()
     {
+        Transform positionEnemy = _spawnPointsEnemies[1];
+        bool hasRemoved = false;
         for (int i = 0; i < _battle.enemies.Count; i++)
         {
+            if (_battle.enemies.Count == 2 && !hasRemoved)
+            {
+                _spawnPointsEnemies.RemoveAt(0);
+                hasRemoved = true;
+            }
+
             CharacterDataSO data = _battle.enemies[i];
 
             GameObject go = Instantiate(_enemyPrefab, _spawnPointsEnemies[i].position, Quaternion.identity);
@@ -257,7 +269,12 @@ public partial class CombatManager : MonoBehaviour
 
             _turnsList.Add(character);
             _enemiesList.Add(character);
+
+            OnSettingLifeToLevel?.Invoke(character, _battle);
         }
+
+        if (_battle.enemies.Count == 2)
+            _spawnPointsEnemies.Insert(0, positionEnemy);
     }
 
     public void StartTurn()
@@ -323,19 +340,19 @@ public partial class CombatManager : MonoBehaviour
         ChangeState(CombatStates.PlayerSelectFireball);
     }
 
-    public void OnIceWallClicked_ChangeState()
+    public void OnMagicShieldClicked_ChangeState()
     {
-        ChangeState(CombatStates.PlayerSelectIceWall);
+        ChangeState(CombatStates.PlayerSelectMagicShield);
     }
 
-    public void OnDarkShieldClicked_ChangeState()
+    public void OnAbsorbClicked_ChangeState()
     {
-        ChangeState(CombatStates.PlayerSelectDarkShield);
+        ChangeState(CombatStates.PlayerSelectAbsorb);
     }
 
-    public void OnHealingRootClicked_ChangeState()
+    public void OnHealClicked_ChangeState()
     {
-        ChangeState(CombatStates.PlayerSelectHealingRoot);
+        ChangeState(CombatStates.PlayerSelectHeal);
     }
 
     public void OnPlayerKillEnemy_RemoveEnemy(Character enemy)
@@ -344,6 +361,7 @@ public partial class CombatManager : MonoBehaviour
         _enemiesList.Remove(enemy);
         if (_enemiesList.Count == 0)
         {
+            OnWaitingForWin?.Invoke();
             if (_waitingWinCoroutine != null)
                 StopCoroutine(_waitingWinCoroutine);
 
