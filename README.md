@@ -20,3 +20,7 @@ Colorfiction_HandDrawnFonts (https://colorfiction.itch.io/handdrawnfonts)
 8Bit Music - 062022 (https://assetstore.unity.com/packages/audio/music/8bit-music-062022-225623)
 Free UI Click Sound Effects Pack (https://assetstore.unity.com/packages/audio/sound-fx/free-ui-click-sound-pack-244644)
 RPG_Essentials_Free (https://assetstore.unity.com/packages/audio/sound-fx/rpg-essentials-sound-effects-free-227708)
+
+GDD: https://docs.google.com/document/d/1KY6FYIFrOLeUch3mCsUKCwzIjrQ1PVQyK3g4U9E-W1g/edit?usp=sharing
+
+Made by FacuGerry :)
