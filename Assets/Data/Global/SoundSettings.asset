@@ -14,5 +14,5 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   mixer: {fileID: 24100000, guid: e0b2dc873f087c6429cc3b2b748de695, type: 2}
   masterVol: 0.8
-  musicVol: 0.15581839
+  musicVol: 0.15
   sfxVol: 1

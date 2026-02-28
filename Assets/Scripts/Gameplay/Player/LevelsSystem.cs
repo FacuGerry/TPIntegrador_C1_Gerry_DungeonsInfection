@@ -27,11 +27,9 @@ public class LevelsSystem : MonoBehaviour
 
 	private IEnumerator LevelingUp()
 	{
-		float rand = UnityEngine.Random.value + 1;
-
 		_data.levelBeforeBattle = _data.level;
 
-		_data.experience += (int)(_data.experienceToGainAfterBattle * rand);
+		_data.experience += _data.experienceToGainAfterBattle;
 		if (_data.experience >= _data.experienceToLevelUp)
 		{
 			while (_data.experience >= _data.experienceToLevelUp)

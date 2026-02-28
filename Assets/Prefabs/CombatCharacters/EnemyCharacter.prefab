@@ -175,6 +175,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   data: {fileID: 0}
   life: 0
+  maxLife: 0
 --- !u!114 &793327230409010674
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -276,7 +277,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 0
+  m_SortingOrder: 1
   m_Sprite: {fileID: -6108517423855348156, guid: 72317c164a4156f439c0061900e7b883, type: 3}
   m_Color: {r: 1, g: 0, b: 0, a: 1}
   m_FlipX: 0

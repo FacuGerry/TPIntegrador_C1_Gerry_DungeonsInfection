@@ -7,8 +7,6 @@ public partial class CombatManager : MonoBehaviour
 {
     public static event Action OnBattleStart;
 
-    public static event Action<Character, BattleDefinitionSO> OnSettingLifeToLevel;
-
     public static event Action OnWaitingForNewTurn;
     public static event Action OnWaitingForWin;
 
@@ -19,6 +17,8 @@ public partial class CombatManager : MonoBehaviour
 
     public static event Action OnPlayerEscaped;
     public static event Action OnPlayerNotEscaped;
+
+    public static event Action<Character> OnPlayerInfected;
 
     public static event Action<Character> OnIndicationsChange;
 
@@ -50,6 +50,7 @@ public partial class CombatManager : MonoBehaviour
     private IEnumerator _waitingToStartCoroutine;
     private IEnumerator _waitingCoroutine;
     private IEnumerator _waitingWinCoroutine;
+    private IEnumerator _waitingInfectionCoroutine;
 
     private void Awake()
     {
@@ -89,6 +90,8 @@ public partial class CombatManager : MonoBehaviour
         UiCombatButtons.OnHealClicked += OnHealClicked_ChangeState;
 
         CombatAction.OnPlayerKillEnemy += OnPlayerKillEnemy_RemoveEnemy;
+
+        Character.OnPlayerDie += OnPlayerDie_ChangeStateToLost;
     }
 
     private void OnDisable()
@@ -108,6 +111,8 @@ public partial class CombatManager : MonoBehaviour
         UiCombatButtons.OnHealClicked -= OnHealClicked_ChangeState;
 
         CombatAction.OnPlayerKillEnemy -= OnPlayerKillEnemy_RemoveEnemy;
+
+        Character.OnPlayerDie -= OnPlayerDie_ChangeStateToLost;
     }
 
     private void OnDestroy()
@@ -133,6 +138,20 @@ public partial class CombatManager : MonoBehaviour
     {
         yield return new WaitForSeconds(1.5f);
         ChangeState(CombatStates.Won);
+    }
+
+    private IEnumerator WaitingForInfection()
+    {
+        foreach (Character player in _playersList)
+        {
+            if (player.isInfected)
+            {
+                OnPlayerInfected?.Invoke(player);
+                yield return new WaitForSeconds(1f);
+            }
+        }
+
+        StartTurn();
     }
 
     public void ChangeState(CombatStates newState)
@@ -165,6 +184,11 @@ public partial class CombatManager : MonoBehaviour
                 {
                     _turnCount = 0;
                     OnRoundEnd?.Invoke();
+                    if (CheckInfecteds())
+                    {
+                        ChangeState(CombatStates.Infected);
+                        break;
+                    }
                 }
                 StartTurn();
                 break;
@@ -229,6 +253,14 @@ public partial class CombatManager : MonoBehaviour
                 OnPlayerEscaped?.Invoke();
                 _battle.isWon = false;
                 break;
+
+            case CombatStates.Infected:
+                if (_waitingInfectionCoroutine != null)
+                    StopCoroutine(_waitingInfectionCoroutine);
+
+                _waitingInfectionCoroutine = WaitingForInfection();
+                StartCoroutine(_waitingInfectionCoroutine);
+                break;
         }
     }
 
@@ -241,7 +273,7 @@ public partial class CombatManager : MonoBehaviour
             GameObject go = Instantiate(_playerPrefab, _spawnPointsPlayer[i].position, Quaternion.identity);
 
             Character character = go.GetComponent<Character>();
-            character.SetData(data);
+            character.SetData(data, _battle);
 
             _turnsList.Add(character);
             _playersList.Add(character);
@@ -265,12 +297,11 @@ public partial class CombatManager : MonoBehaviour
             GameObject go = Instantiate(_enemyPrefab, _spawnPointsEnemies[i].position, Quaternion.identity);
 
             Character character = go.GetComponent<Character>();
-            character.SetData(data);
+            character.SetData(data, _battle);
 
             _turnsList.Add(character);
             _enemiesList.Add(character);
 
-            OnSettingLifeToLevel?.Invoke(character, _battle);
         }
 
         if (_battle.enemies.Count == 2)
@@ -370,7 +401,24 @@ public partial class CombatManager : MonoBehaviour
         }
     }
 
+    public bool CheckInfecteds()
+    {
+        bool hasToWait = false;
+        foreach (Character player in _playersList)
+        {
+            if (player.isInfected)
+                hasToWait = true;
+        }
+
+        return hasToWait;
+    }
+
     public void OnEnemyKilledPlayer_ChangeStateToLost()
+    {
+        ChangeState(CombatStates.Lost);
+    }
+
+    public void OnPlayerDie_ChangeStateToLost(Character player)
     {
         ChangeState(CombatStates.Lost);
     }

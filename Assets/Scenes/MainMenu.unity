@@ -1973,6 +1973,71 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1383517191}
   m_CullTransparentMesh: 1
+--- !u!1 &1561059767
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1561059769}
+  - component: {fileID: 1561059768}
+  m_Layer: 0
+  m_Name: StatSetter
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1561059768
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1561059767}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 27cb2a303d8c959408b63199019469ec, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _dataLoad: {fileID: 11400000, guid: 800a09c7be76ddc48a375f0de6f43d0c, type: 2}
+  _royd: {fileID: 11400000, guid: 2da278d600cc873459523b783980e1e4, type: 2}
+  _thane: {fileID: 11400000, guid: d551ff6a524fad4429f1033e719a9633, type: 2}
+  _spellsData: {fileID: 11400000, guid: 27595a118aee6724088cc0efe8fc8180, type: 2}
+  _levelsData: {fileID: 11400000, guid: f86882f5f6dd74140acf4b7bc76b7d31, type: 2}
+  _battles:
+  - {fileID: 11400000, guid: 39960353d0a9e634484287a1f4505449, type: 2}
+  - {fileID: 11400000, guid: 6b8e9979061ccc949b0e5fe2a3cea020, type: 2}
+  - {fileID: 11400000, guid: 18e9396c4cb150a488136162132891bb, type: 2}
+  - {fileID: 11400000, guid: 25bfd7b21127f0143b0180ed217a3b43, type: 2}
+  - {fileID: 11400000, guid: c4cab13c1c0a5d54895d227755418271, type: 2}
+  - {fileID: 11400000, guid: 5c95e813be8a4b04ba1047024ee2577d, type: 2}
+  - {fileID: 11400000, guid: 837e85d17f2b6be4cab7c878b73d1f5f, type: 2}
+  - {fileID: 11400000, guid: dd089cda992ff384ba9f4c741b1ccaaf, type: 2}
+  - {fileID: 11400000, guid: ba29ca971e9af36409e5779a80c9a5ee, type: 2}
+  - {fileID: 11400000, guid: afeeb6151c0e0b64d8dfd1e6a5b6974f, type: 2}
+  - {fileID: 11400000, guid: 89d34248a5093e04aba6cca49fe87e69, type: 2}
+  - {fileID: 11400000, guid: e42f8e47634232943be347e606cd43ed, type: 2}
+  - {fileID: 11400000, guid: 2bcec703568d7f645a1fc9da2bf1bf54, type: 2}
+  - {fileID: 11400000, guid: a826e158fe70d7a469642839ededc00f, type: 2}
+  - {fileID: 11400000, guid: aad427d14be72454bb30ef5fa1798393, type: 2}
+--- !u!4 &1561059769
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1561059767}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 2.278659, y: -24.752865, z: -0.08554644}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1628542369
 GameObject:
   m_ObjectHideFlags: 0
@@ -2623,6 +2688,14 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 1982665570690963761, guid: 8f87e8dd371917843b44e6f792c34b0b, type: 3}
+      propertyPath: m_Resource
+      value: 
+      objectReference: {fileID: 8300000, guid: 1f2ad53bacc245642854dbdc8ea71a9b, type: 3}
+    - target: {fileID: 1982665570690963761, guid: 8f87e8dd371917843b44e6f792c34b0b, type: 3}
+      propertyPath: m_audioClip
+      value: 
+      objectReference: {fileID: 8300000, guid: 1f2ad53bacc245642854dbdc8ea71a9b, type: 3}
     - target: {fileID: 2390558267779185367, guid: 8f87e8dd371917843b44e6f792c34b0b, type: 3}
       propertyPath: m_Name
       value: MusicController
@@ -2667,7 +2740,8 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 8080026612384166749, guid: 8f87e8dd371917843b44e6f792c34b0b, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []
@@ -2683,3 +2757,4 @@ SceneRoots:
   - {fileID: 181353517}
   - {fileID: 105130557}
   - {fileID: 811032449681667962}
+  - {fileID: 1561059769}

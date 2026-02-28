@@ -1,3 +1,4 @@
+using System;
 using TMPro;
 using UnityEngine;
 
@@ -29,13 +30,11 @@ public class UiCombatText : MonoBehaviour
 
         CombatAction.OnPlayerHealedWithAbsorb += OnPlayerHealedWithAbsorb_ChangeText;
 
-        EnemyTurnManager.OnEnemyTurnStart += OnEnemyTurnStart_ChangeText;
-
         EnemyTurnManager.OnShowEnemyAttacked += OnShowEnemyAttacked_ChangeText;
 
         UiCombatButtons.OnNotHavingSpells += OnNotHavingSpells_ChangeText;
 
-        Character.OnInfected += OnInfected_ChangeText;
+        CombatManager.OnPlayerInfected += OnInfected_ChangeText;
 
         CombatAction.OnFailedToCast += OnFailedToCast_ChangeText;
     }
@@ -64,15 +63,18 @@ public class UiCombatText : MonoBehaviour
 
         CombatAction.OnPlayerHealedWithAbsorb -= OnPlayerHealedWithAbsorb_ChangeText;
 
-        EnemyTurnManager.OnEnemyTurnStart -= OnEnemyTurnStart_ChangeText;
-
         EnemyTurnManager.OnShowEnemyAttacked -= OnShowEnemyAttacked_ChangeText;
 
         UiCombatButtons.OnNotHavingSpells -= OnNotHavingSpells_ChangeText;
 
-        Character.OnInfected -= OnInfected_ChangeText;
+        CombatManager.OnPlayerInfected -= OnInfected_ChangeText;
 
         CombatAction.OnFailedToCast -= OnFailedToCast_ChangeText;
+    }
+
+    private void OnDestroy()
+    {
+        StopAllCoroutines();
     }
 
     public void OnBattleStart_ChangeText()
@@ -92,7 +94,7 @@ public class UiCombatText : MonoBehaviour
 
         if (player.life <= 0)
             _text.text = player.data.name + " has died. Battle is over...";
-        else 
+        else
             _text.text = "It's " + player.data.name + "'s turn.";
     }
 
@@ -111,17 +113,9 @@ public class UiCombatText : MonoBehaviour
         _text.text = "Couldn't run away.";
     }
 
-    public void OnEnemyTurnStart_ChangeText(CharacterDataSO enemy)
-    {
-        _text.text = "It's " + enemy.name + "'s turn.";
-    }
-
     public void OnShowEnemyAttacked_ChangeText(CharacterDataSO enemy, Character player, string action)
     {
-        if (action == "healed")
-            _text.text = enemy.name + " " + action + ".";
-        else
-            _text.text = enemy.name + " " + action + " " + player.data.name + ".";
+        _text.text = enemy.name + " " + action + " " + player.data.name + ".";
     }
 
     public void OnPlayerSelectEnemy_ChangeText()

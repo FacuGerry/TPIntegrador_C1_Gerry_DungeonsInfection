@@ -16,5 +16,5 @@ MonoBehaviour:
   level: 1
   maxLevel: 10
   experience: 0
-  experienceToGainAfterBattle: 65
+  experienceToGainAfterBattle: 50
   experienceToLevelUp: 150

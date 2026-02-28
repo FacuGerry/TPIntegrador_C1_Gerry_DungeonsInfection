@@ -169,7 +169,8 @@ TextureImporter:
     edges: []
     weights: []
     secondaryTextures: []
-    nameFileIdTable: {}
+    nameFileIdTable:
+      BarTile_18_0: -4104516758621880918
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

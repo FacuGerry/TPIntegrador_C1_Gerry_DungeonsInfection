@@ -60,7 +60,7 @@ public partial class CombatAction : MonoBehaviour
 				{
 					if (_isFireball)
 					{
-						enemy.life -= player.data.fireball;
+						enemy.life -= (int)(player.data.attack * player.data.fireballMult);
 						OnPlayerUsedSpell?.Invoke(player, _spells);
 						_spells = Spells.None;
 						_isFireball = false;
@@ -100,8 +100,9 @@ public partial class CombatAction : MonoBehaviour
 
 	public void OnPlayerUsedAbsorb_AddLife(Character player)
 	{
-		player.life += player.data.absorb;
+		player.life += (int)(player.data.defense * player.data.absorbMult);
 		player.isAbsorbOn = false;
+
 		if (player.life > player.maxLife)
 			player.life = player.maxLife;
 
@@ -161,7 +162,7 @@ public partial class CombatAction : MonoBehaviour
 	{
 		if (TryToCast(player))
 		{
-			player.defense += player.data.magicShield;
+			player.defense += (int)(player.data.defense * player.data.magicShieldMult);
 			player.isMagicShieldOn = true;
 			_spells = Spells.MagicShield;
 			OnPlayerUsedSpell?.Invoke(player, _spells);
@@ -181,7 +182,7 @@ public partial class CombatAction : MonoBehaviour
 	{
 		if (TryToCast(player))
 		{
-			player.defense += player.data.absorb;
+			player.defense += (int)(player.data.defense * player.data.absorbMult);
 			player.isAbsorbOn = true;
 			_spells = Spells.Absorb;
 			OnPlayerUsedSpell?.Invoke(player, _spells);

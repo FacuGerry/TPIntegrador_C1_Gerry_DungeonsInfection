@@ -5,7 +5,6 @@ using UnityEngine;
 
 public class EnemyTurnManager : MonoBehaviour
 {
-    public static event Action<CharacterDataSO> OnEnemyTurnStart;
     public static event Action<Character> OnEnemyAttack;
     public static event Action<CharacterDataSO, Character, string> OnShowEnemyAttacked;
     public static event Action OnEnemyAttackEnd;
@@ -44,93 +43,82 @@ public class EnemyTurnManager : MonoBehaviour
     {
         float rand = UnityEngine.Random.value;
 
-        if (rand < 0.15f && enemy.life < (enemy.life / 1.5))
-        {
-            // heal
-            _action = "healed";
-            enemy.life += _battleDefinition.battleLevel * _infectedAttacks.heal;
-            if (enemy.life > enemy.data.life)
-                enemy.life = enemy.data.life;
-        }
-        else if ((rand < 0.15f && enemy.life > (enemy.life / 1.5)) || (rand >= 0.15f && rand < 0.45f))
+        if (rand < 0.33f)
         {
             // scratch
             _action = "scratched";
-            _attack *= _battleDefinition.battleLevel + 1;
+            _attack = (int)(_battleDefinition.battleLevel * _infectedAttacks.scratch);
         }
-        else if (rand >= 0.45f && rand < 0.65f)
+        else if (rand >= 0.33f && rand < 0.66f)
         {
             // bite
             _action = "bit";
-            _attack = _battleDefinition.battleLevel * _infectedAttacks.bite;
+            _attack = (int)(_battleDefinition.battleLevel * _infectedAttacks.bite);
         }
-        else if (rand >= 0.65f)
+        else if (rand >= 0.66f)
         {
             // infect
             _action = "infected";
-            _attack = _battleDefinition.battleLevel * _infectedAttacks.infect;
-            _playerAttacked.isInfected = true;
+            _attack = (int)(_battleDefinition.battleLevel * _infectedAttacks.infect);
         }
 
-        if (_action != "healed")
+        int finalDmg = (_attack - _playerAttacked.defense);
+
+        if (_playerAttacked.isAbsorbOn)
+            finalDmg -= (int)(_playerAttacked.data.defense * _playerAttacked.data.absorbMult);
+
+        if (_playerAttacked.isMagicShieldOn)
+            finalDmg -= (int)(_playerAttacked.data.defense * _playerAttacked.data.magicShieldMult);
+
+        if (finalDmg <= 0)
         {
-            int finalDmg = (_attack - _playerAttacked.defense);
-
-            if (_playerAttacked.isAbsorbOn)
-                finalDmg -= _playerAttacked.data.absorb;
-
-            if (_playerAttacked.isMagicShieldOn)
-                finalDmg -= _playerAttacked.data.magicShield;
-
-            if (finalDmg <= 0)
-            {
-                _attack = 0;
-                _action = "failed to attack";
-            }
-            else
-                _attack = finalDmg;
-
-            _playerAttacked.life -= _attack;
-
-            if (_playerAttacked.life <= 0)
-                _playerAttacked.life = 0;
-
-
-            _attack = enemy.data.attack;
-            OnEnemyAttack?.Invoke(_playerAttacked);
-            if (_playerAttacked.isAbsorbOn)
-            {
-                OnPlayerUsedAbsorb?.Invoke(_playerAttacked);
-            }
-
-            OnShowEnemyAttacked?.Invoke(enemy.data, _playerAttacked, _action);
-
-            if (_action != "failed to attack")
-                OnAnimateEnemyAttack?.Invoke(enemy, _playerAttacked);
-
-            if (_playerAttacked.life <= 0)
-            {
-                OnEnemyKilledPlayer?.Invoke();
-                yield return null;
-            }
-
-            yield return new WaitForSeconds(1f);
-
-            OnEnemyAttackEnd?.Invoke();
+            _attack = 0;
+            _action = "failed to attack";
         }
+        else
+            _attack = finalDmg;
+
+        if (finalDmg > 0 && _action == "infected")
+            _playerAttacked.isInfected = true;
+
+        _playerAttacked.life -= _attack;
+
+        if (_playerAttacked.life <= 0)
+            _playerAttacked.life = 0;
+
+
+        _attack = enemy.data.attack;
+        OnEnemyAttack?.Invoke(_playerAttacked);
+        if (_playerAttacked.isAbsorbOn)
+        {
+            OnPlayerUsedAbsorb?.Invoke(_playerAttacked);
+        }
+
+        OnShowEnemyAttacked?.Invoke(enemy.data, _playerAttacked, _action);
+
+        if (_action != "failed to attack")
+            OnAnimateEnemyAttack?.Invoke(enemy, _playerAttacked);
+
+        if (_playerAttacked.life <= 0)
+        {
+            OnEnemyKilledPlayer?.Invoke();
+            yield return null;
+        }
+
+        yield return new WaitForSeconds(1f);
+
+        OnEnemyAttackEnd?.Invoke();
     }
 
     private IEnumerator VirusAttack(Character enemy)
     {
-        float rand = UnityEngine.Random.value + 1;
-
-        float finalDmg = (_attack - _playerAttacked.defense) * rand * _battleDefinition.battleLevel;
+        float finalDmg = (_attack - _playerAttacked.defense) * _battleDefinition.battleLevel;
 
         if (_playerAttacked.isAbsorbOn)
-            finalDmg -= _playerAttacked.data.absorb;
+            finalDmg -= (int)(_playerAttacked.data.defense * _playerAttacked.data.absorbMult);
 
         if (_playerAttacked.isMagicShieldOn)
-            finalDmg -= _playerAttacked.data.magicShield;
+            finalDmg -= (int)(_playerAttacked.data.defense * _playerAttacked.data.magicShieldMult);
 
         if (finalDmg < 0)
         {
@@ -178,8 +166,6 @@ public class EnemyTurnManager : MonoBehaviour
 
     public void OnEnemyTurn_SelectPlayerToAttack(Character enemy, List<Character> players)
     {
-        OnEnemyTurnStart?.Invoke(enemy.data);
-
         _attack = enemy.data.attack;
         Character royd = players[0];
         Character thane = players[1];

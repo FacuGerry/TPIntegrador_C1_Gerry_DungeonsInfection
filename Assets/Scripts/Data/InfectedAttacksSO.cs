@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class InfectedAttacksSO : ScriptableObject
 {
-    public int heal;
+    public int scratch;
     public int bite;
     public int infect;
 }

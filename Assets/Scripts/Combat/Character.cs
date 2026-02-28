@@ -7,6 +7,7 @@ public partial class Character : MonoBehaviour
     public static event Action<Character, List<Character>> OnEnemyTurn;
     public static event Action<Character> OnDataSet;
     public static event Action<Character> OnInfected;
+    public static event Action<Character> OnPlayerDie;
 
     public CharacterDataSO data;
     private SpriteRenderer _spriteRenderer;
@@ -15,7 +16,7 @@ public partial class Character : MonoBehaviour
     private static readonly int _state = Animator.StringToHash("State");
 
     public int life;
-    [NonSerialized] public int maxLife;
+    public int maxLife;
     [NonSerialized] public bool isMagicShieldOn = false;
     [NonSerialized] public bool isAbsorbOn = false;
     [NonSerialized] public int defense = 0;
@@ -38,8 +39,6 @@ public partial class Character : MonoBehaviour
 
         CombatManager.OnRoundEnd += OnRoundEnd_Infect;
 
-        CombatManager.OnSettingLifeToLevel += SetLifeToLevel;
-
         LevelsSystem.OnLevelUp += OnLevelUp_AddStats;
     }
 
@@ -49,18 +48,26 @@ public partial class Character : MonoBehaviour
 
         CombatManager.OnRoundEnd -= OnRoundEnd_Infect;
 
-        CombatManager.OnSettingLifeToLevel -= SetLifeToLevel;
-
         LevelsSystem.OnLevelUp -= OnLevelUp_AddStats;
     }
 
-    public void SetData(CharacterDataSO dataChar)
+    public void SetData(CharacterDataSO dataChar, BattleDefinitionSO battle)
     {
         data = dataChar;
-        life = dataChar.life;
+
+        if (!dataChar.isPlayer)
+        {
+            life = (int)(dataChar.life * battle.battleLevel);
+        }
+        else
+        {
+            life = dataChar.life;
+        }
+
         maxLife = life;
         _spriteRenderer.sprite = dataChar.spriteRenderer.sprite;
         _animator.runtimeAnimatorController = dataChar.animator.runtimeAnimatorController;
+        defense = 0;
 
         gameObject.name = data.name;
 
@@ -89,18 +96,17 @@ public partial class Character : MonoBehaviour
 
     public void OnRoundEnd_Infect()
     {
-        if (!data.isPlayer && isInfected)
+        if (data.isPlayer && isInfected)
         {
             life -= data.lifeToQuitOnInfected;
-            OnInfected?.Invoke(this);
-        }
-    }
 
-    public void SetLifeToLevel(Character enemy, BattleDefinitionSO battle)
-    {
-        if (!enemy.data.isPlayer)
-        {
-            enemy.life *= (battle.battleLevel / 10) + 1;
+            if (life <= 0)
+                life = 0;
+
+            OnInfected?.Invoke(this);
+
+            if (life == 0)
+                OnPlayerDie?.Invoke(this);
         }
     }
 
@@ -111,16 +117,10 @@ public partial class Character : MonoBehaviour
 
         for (int i = levelBefore; i < level; i++)
         {
-            data.attack += data.valueToAddWhenLevelUp;
-            data.life += data.valueToAddWhenLevelUp;
-
-            data.defense += data.valueToAddWhenLevelUpDefense;
-
-            data.fireball += data.valueToAddWhenLevelUp;
-
-            data.magicShield += data.valueToAddWhenLevelUpDefense;
-            data.absorb += data.valueToAddWhenLevelUpDefense;
-            data.heal += data.valueToAddWhenLevelUpDefense;
+            data.attack += data.levelUpAttack;
+            data.life += data.levelUpLife;
+            data.defense += data.levelUpDefense;
+            data.heal += data.levelUpDefense;
         }
     }
 }

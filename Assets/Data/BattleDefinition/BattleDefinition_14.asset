@@ -19,5 +19,5 @@ MonoBehaviour:
   - {fileID: 11400000, guid: f080b0001a31099488d43eb385acdfca, type: 2}
   - {fileID: 11400000, guid: f080b0001a31099488d43eb385acdfca, type: 2}
   - {fileID: 11400000, guid: f080b0001a31099488d43eb385acdfca, type: 2}
-  battleLevel: 4
+  battleLevel: 2.4
   isWon: 0

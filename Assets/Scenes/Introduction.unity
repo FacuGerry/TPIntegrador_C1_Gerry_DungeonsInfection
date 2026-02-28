@@ -201,11 +201,10 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3655912263225659329, guid: a5c62514ccc5f954d936ba9a89bf9d42, type: 3}
       propertyPath: m_text
-      value: "You are a former soldier, called Royd, exploring a dungeon with your
-        sister, Thane.  An infection started spreading among it and you've decided
-        to stay away from it, where it couldn\xB4t reach. But now you\xB4ve realised,
-        you\xB4re the ones meant to stop it and save everyone. Crawl through the
-        dungeon and defeat the virus!!!"
+      value: You are Royd, an adventurer who has been trapped in a dungeon with his
+        sister, Thane. You'd love to leave and be free, but an infection is spreading
+        across the underworld and you'll need to defeat it in order to escape. Defeat
+        all the enemies in the dungeon and escape!
       objectReference: {fileID: 0}
     - target: {fileID: 3655912263225659329, guid: a5c62514ccc5f954d936ba9a89bf9d42, type: 3}
       propertyPath: m_fontSize
@@ -676,6 +675,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _data: {fileID: 11400000, guid: 69fb020aef4e4684aae24a642cc034f2, type: 2}
+  _position: {fileID: 11400000, guid: 488f4e99c86e8aa49821088839115fdc, type: 2}
+  _positionToSpawn: {x: 0, y: -2.4, z: 0}
   _sceneToLoad: Overworld
 --- !u!4 &1839067088
 Transform:

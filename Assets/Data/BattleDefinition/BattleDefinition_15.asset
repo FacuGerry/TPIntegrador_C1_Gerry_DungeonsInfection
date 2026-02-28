@@ -18,6 +18,6 @@ MonoBehaviour:
   enemies:
   - {fileID: 11400000, guid: 2350ee6f4c45a3944a542aed5aed403d, type: 2}
   - {fileID: 11400000, guid: 2350ee6f4c45a3944a542aed5aed403d, type: 2}
-  - {fileID: 11400000, guid: 2350ee6f4c45a3944a542aed5aed403d, type: 2}
-  battleLevel: 5
+  - {fileID: 11400000, guid: f080b0001a31099488d43eb385acdfca, type: 2}
+  battleLevel: 2.6
   isWon: 0

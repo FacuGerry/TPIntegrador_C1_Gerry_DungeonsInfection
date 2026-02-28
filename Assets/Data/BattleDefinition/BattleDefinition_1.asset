@@ -17,5 +17,5 @@ MonoBehaviour:
   - {fileID: 11400000, guid: d551ff6a524fad4429f1033e719a9633, type: 2}
   enemies:
   - {fileID: 11400000, guid: f080b0001a31099488d43eb385acdfca, type: 2}
-  battleLevel: 1
+  battleLevel: 0.8
   isWon: 0

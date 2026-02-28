@@ -12,6 +12,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1b528e04a9695e14e9a2b490329b76e5, type: 3}
   m_Name: InfectedAttacks
   m_EditorClassIdentifier: 
-  heal: 3
+  scratch: 2
   bite: 3
   infect: 1

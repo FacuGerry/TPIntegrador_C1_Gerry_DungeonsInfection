@@ -17,5 +17,6 @@ public partial class CombatManager
         Won,
         Lost,
         Escaped,
+        Infected
     }
 }

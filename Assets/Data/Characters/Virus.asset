@@ -13,16 +13,22 @@ MonoBehaviour:
   m_Name: Virus
   m_EditorClassIdentifier: 
   characterName: Virus
-  life: 12
+  baseLife: 13
+  life: 13
+  baseAttack: 4
   attack: 4
   spriteRenderer: {fileID: 4563017240499988079, guid: b9cb0c17b587865419cfa349db27ff16, type: 3}
   animator: {fileID: 7119002091330096071, guid: b9cb0c17b587865419cfa349db27ff16, type: 3}
   isPlayer: 0
-  fireball: 0
-  iceWall: 0
-  darkShield: 0
-  healingRoot: 0
+  fireballMult: 0
+  magicShieldMult: 0
+  absorbMult: 0
+  baseHeal: 0
+  heal: 0
   defense: 0
   valueToEscape: 0
-  valueToAddWhenLevelUp: 0
-  valueToAddWhenLevelUpDefense: 0
+  chanceToCastSpell: 0
+  lifeToQuitOnInfected: 0
+  levelUpLife: 0
+  levelUpAttack: 0
+  levelUpDefense: 0

@@ -73,8 +73,10 @@ public class SoundController : MonoBehaviour
         CombatAction.OnPlayerHealedWithAbsorb += OnPlayerHealedWithAbsorb_SoundHealAbsorb;
         CombatAction.OnPlayerKillEnemy += OnPlayerKillEnemy_SoundEnemyDeath;
 
-        EnemyTurnManager.OnEnemyKilledPlayer += OnPlayerDie_SoundPlayerDead;
+        EnemyTurnManager.OnEnemyKilledPlayer += OnPlayerDieByEnemy_SoundPlayerDead;
         EnemyTurnManager.OnShowEnemyAttacked += OnEnemyAttack_SoundEnemyAttack;
+
+        Character.OnPlayerDie += OnPlayerDie_SoundPlayerDead;
 
         UiCombatButtons.OnNotHavingSpells += OnNotHavingSpells_SoundNotSpells;
 
@@ -98,8 +100,10 @@ public class SoundController : MonoBehaviour
         CombatAction.OnPlayerHealedWithAbsorb -= OnPlayerHealedWithAbsorb_SoundHealAbsorb;
         CombatAction.OnPlayerKillEnemy -= OnPlayerKillEnemy_SoundEnemyDeath;
 
-        EnemyTurnManager.OnEnemyKilledPlayer -= OnPlayerDie_SoundPlayerDead;
+        EnemyTurnManager.OnEnemyKilledPlayer -= OnPlayerDieByEnemy_SoundPlayerDead;
         EnemyTurnManager.OnShowEnemyAttacked -= OnEnemyAttack_SoundEnemyAttack;
+
+        Character.OnPlayerDie -= OnPlayerDie_SoundPlayerDead;
 
         UiCombatButtons.OnNotHavingSpells -= OnNotHavingSpells_SoundNotSpells;
 
@@ -202,7 +206,12 @@ public class SoundController : MonoBehaviour
         _sfx.PlayOneShot(_infectedDeadSound);
     }
 
-    public void OnPlayerDie_SoundPlayerDead()
+    public void OnPlayerDieByEnemy_SoundPlayerDead()
+    {
+        _sfx.PlayOneShot(_playerDeathSound);
+    }
+
+    public void OnPlayerDie_SoundPlayerDead(Character player)
     {
         _sfx.PlayOneShot(_playerDeathSound);
     }

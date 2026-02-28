@@ -26,7 +26,6 @@ public class GlobalManager : MonoBehaviour
     private void Start()
     {
         _playerPosition.position = _playerInitialPosition;
-
         SceneManager.LoadScene(_sceneToLoadAfterLoading);
     }
 

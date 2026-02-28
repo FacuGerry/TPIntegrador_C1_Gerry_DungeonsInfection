@@ -48,7 +48,8 @@ public class CheckAllWinsAndRestart : MonoBehaviour
     private IEnumerator WaitAndLoadWinScreen()
     {
         yield return new WaitForSeconds(2f);
-        SceneManager.LoadScene(_sceneToLoad);
+        if (_sceneToLoad != ".")
+            SceneManager.LoadScene(_sceneToLoad);
     }
 
     public void OnPlayerWin_CheckWinGame()
@@ -84,10 +85,8 @@ public class CheckAllWinsAndRestart : MonoBehaviour
         {
             player.life = player.baseLife;
             player.attack = player.baseAttack;
-            player.fireball = player.baseFireball;
-            player.magicShield = player.baseMagicShield;
-            player.absorb = player.baseAbsorb;
             player.heal = player.baseHeal;
+            player.defense = player.baseDefense;
         }
 
         _spellsData.hasFireball = false;
